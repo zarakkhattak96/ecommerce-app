@@ -1,0 +1,33 @@
+{
+  "name": "ecommerce-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "fmt": "rome format src--write",
+    "fmt:dry": "rome format src",
+    "lint": "rome check src",
+    "lin:fix": "rome check src --apply-unsafe",
+    "start": "tsx watch ./src/web/server.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Zarak Khattak ",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.18.2",
+    "mongodb": "^6.3.0",
+    "mongoose": "^8.2.0",
+    "rome": "^12.1.3",
+    "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.22",
+    "nodemon": "^3.1.0",
+    "tsx": "^4.7.1",
+    "typescript": "^5.3.3"
+  },
+  "repository": "git@github.com:zarakkhattak96/ecommerce-app.git"
+}
