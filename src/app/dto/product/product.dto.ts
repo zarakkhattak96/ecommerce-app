@@ -13,12 +13,13 @@ export class AddProductDto {
     isAvailable: z.boolean(),
   });
   private constructor(
+    readonly contextId: string,
     readonly addProdDto: Readonly<z.infer<typeof AddProductDto.schema>>,
   ) {}
 
-  static addProd(data: unknown): AddProductDto {
+  static addProd(contextId: string, data: unknown): AddProductDto {
     const { ...addProdDto } = validateData(AddProductDto.schema, data);
 
-    return new AddProductDto(addProdDto);
+    return new AddProductDto(contextId, addProdDto);
   }
 }

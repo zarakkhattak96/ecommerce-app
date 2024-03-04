@@ -6,7 +6,8 @@ export class ProductController {
   constructor(private readonly prodServ: ProductService) {}
 
   addProd = async (req: Request, res: Response) => {
-    const prodDto = AddProductDto.addProd(req.body);
+    const prodDto = AddProductDto.addProd(req.id, req.body);
+
     const addProd = await this.prodServ.addProduct(prodDto);
 
     return res.status(201).json(addProd);

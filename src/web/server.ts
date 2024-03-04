@@ -4,6 +4,7 @@ import { connectDb } from '../infra/db';
 import bodyParser from 'body-parser';
 import { bootstrapRoutes } from './routes/product/product.routes';
 import { bootstrapDi } from '../infra/db/di/product/product.di';
+import contextIdGenerator from './middleware/context-id.middleware';
 
 export const app = express();
 const bootstrap = async () => {
@@ -13,6 +14,7 @@ const bootstrap = async () => {
 
   const userRouter = bootstrapRoutes(diContainer.prodController);
 
+  contextIdGenerator(app);
   app.use(express.json());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
