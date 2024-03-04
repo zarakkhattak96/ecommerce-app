@@ -15,3 +15,10 @@ export class InvalidData extends AppError {
     this.name = 'InvalidData';
   }
 }
+
+export class NotFoundError extends AppError {
+  constructor(description: string) {
+    super(description);
+    this.name = 'NotFound';
+  }
+}
