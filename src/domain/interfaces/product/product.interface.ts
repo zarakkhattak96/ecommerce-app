@@ -1,18 +1,19 @@
 export interface ProductInterface {
-  make: string;
-  model: number;
-  price: number;
-  description: string;
-  sex: string;
-  color: string;
-  size: number;
-  isAvailable: boolean;
+  id: number;
+  make: string | null;
+  model: number | null;
+  price: number | null;
+  description: string | null;
+  sex: string | null;
+  color: string | null;
+  size: number | null;
+  isAvailable: boolean | null;
 }
 
 export abstract class ProductRepo {
   abstract insert(product: ProductInterface): Promise<ProductInterface>;
-  abstract fetch(id: string): Promise<ProductInterface> | null;
+  abstract fetch(id: number): Promise<ProductInterface> | null;
   abstract fetchAll(): Promise<ProductInterface[]>;
   abstract update(prod: ProductInterface): Promise<ProductInterface>;
-  abstract delete(id: string): Promise<ProductInterface>;
+  abstract delete(id: number): Promise<ProductInterface>;
 }

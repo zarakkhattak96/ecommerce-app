@@ -1,18 +1,51 @@
-import mongoose from 'mongoose';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  Repository,
+} from 'typeorm';
+import { UserModel } from '../user/user.model';
 
-const { Schema } = mongoose;
+@Entity('products', { schema: 'productSchema' })
+export class ProductModel {
+  @PrimaryGeneratedColumn('increment', {
+    name: 'id',
+    type: 'integer',
+  })
+  id: number;
 
-const productSchema = new Schema({
-  make: { type: String, required: true },
-  model: { type: Number, required: true },
-  price: { type: Number, required: true },
-  description: { type: String, required: true },
-  sex: { type: String, required: true },
-  color: { type: String, required: true },
-  size: { type: Number, required: true },
-  isAvailable: { type: Boolean, required: true },
-});
+  @Column('character varying', { name: 'make', nullable: true })
+  make: string | null;
 
-const ProductModel = mongoose.model('ProductModel', productSchema);
+  @Column('integer', { name: 'model', nullable: true })
+  model: number | null;
 
-export default ProductModel;
+  @Column('integer', { name: 'price', nullable: true })
+  price: number | null;
+
+  @Column('character varying', { name: 'description', nullable: true })
+  description: string | null;
+
+  @Column('character varying', { name: 'sex', nullable: true })
+  sex: string | null;
+
+  @Column('character varying', { name: 'color', nullable: true })
+  color: string | null;
+
+  @Column('integer', { name: 'size', nullable: true })
+  size: number | null;
+
+  @Column('boolean', { name: 'is_available', nullable: true })
+  isAvailable: boolean | null;
+
+  @OneToMany(
+    () => UserModel,
+    (user) => user.productId,
+    {
+      nullable: false,
+      cascade: true,
+    },
+  )
+  users: UserModel[];
+}

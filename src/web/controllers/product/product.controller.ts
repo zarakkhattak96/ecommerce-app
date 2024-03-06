@@ -1,4 +1,7 @@
-import { AddProductDto } from '../../../app/dto/product/product.dto';
+import {
+  AddProductDto,
+  DeleteProductDto,
+} from '../../../app/dto/product/product.dto';
 import { ProductService } from '../../../app/services/product/product.service';
 import { Request, Response } from 'express';
 
@@ -11,5 +14,14 @@ export class ProductController {
     const addProd = await this.prodServ.addProduct(prodDto);
 
     return res.status(201).json(addProd);
+  };
+
+  removeProd = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const dto = DeleteProductDto.deleteProd(req.id, parseInt(id));
+
+    const removeProd = await this.prodServ.removeProduct(dto);
+
+    return res.status(204).json(removeProd);
   };
 }

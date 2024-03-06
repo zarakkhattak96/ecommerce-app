@@ -1,16 +1,18 @@
-import mongoose from 'mongoose';
+// import mongoose from 'mongoose';
+// import config from '../config';
+
+// const connectionString = config.DB_URL
+import pg from 'pg';
 import config from '../config';
 
-const connectionString = config.DB_URL;
+const { Client } = pg;
 
-export const connectDb = async () => {
-  try {
-    mongoose.connect(connectionString, {
-      dbName: 'ecommerce',
-    });
+const db = new Client({
+  connectionString: config.DB_URL,
+  password: config.POSTGRES_DB_PASSWORD,
+  // port: config.POSTGRES_DB_PORT
+  host: config.POSTGRES_DB_HOST,
+  user: config.POSTGRES_DB_USER,
+});
 
-    console.log('DB is connected');
-  } catch (e) {
-    console.log('Could not connect to the database');
-  }
-};
+export default db;

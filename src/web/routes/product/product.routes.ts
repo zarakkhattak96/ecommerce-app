@@ -6,5 +6,7 @@ export const bootstrapRoutes = (prodController: ProductController): Router => {
 
   router.post('/addProduct', prodController.addProd);
 
+  router.delete('/:productId', prodController.removeProd);
+
   return router;
 };

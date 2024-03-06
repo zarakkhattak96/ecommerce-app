@@ -1,16 +1,17 @@
 import { z } from 'zod';
-import { validateData } from '../utils';
+import { ID_SCHEMA, validateData } from '../utils';
 
 export class AddProductDto {
   private static schema = z.object({
-    make: z.string(),
-    model: z.number(),
-    price: z.number(),
-    description: z.string(),
-    sex: z.string(),
-    color: z.string(),
-    size: z.number(),
-    isAvailable: z.boolean(),
+    id: z.number(),
+    make: z.string().nullable(),
+    model: z.number().nullable(),
+    price: z.number().nullable(),
+    description: z.string().nullable(),
+    sex: z.string().nullable(),
+    color: z.string().nullable(),
+    size: z.number().nullable(),
+    isAvailable: z.boolean().nullable(),
   });
   private constructor(
     readonly contextId: string,
@@ -21,5 +22,15 @@ export class AddProductDto {
     const { ...addProdDto } = validateData(AddProductDto.schema, data);
 
     return new AddProductDto(contextId, addProdDto);
+  }
+}
+
+export class DeleteProductDto {
+  private constructor(readonly contextId: string, readonly productId: number) {}
+
+  static deleteProd(contextId: string, productId: number): DeleteProductDto {
+    const validProdId = validateData(ID_SCHEMA, productId);
+
+    return new DeleteProductDto(contextId, validProdId);
   }
 }
