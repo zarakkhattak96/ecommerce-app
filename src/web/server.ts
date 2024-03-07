@@ -1,17 +1,15 @@
 import express from 'express';
 import config from '../infra/config';
-// import { connectDb } from '../infra/db';
 import bodyParser from 'body-parser';
 import { bootstrapRoutes } from './routes/product/product.routes';
 import { bootstrapDi } from '../infra/db/di/product/product.di';
 import contextIdGenerator from './middleware/context-id.middleware';
-import db from '../infra/db';
+import dotenv from 'dotenv';
+import ds from '../infra/config/connection.config';
 
+dotenv.config();
 export const app = express();
 const bootstrap = async () => {
-  // await connectDb();
-  await db.connect();
-
   const diContainer = bootstrapDi();
 
   const userRouter = bootstrapRoutes(diContainer.prodController);

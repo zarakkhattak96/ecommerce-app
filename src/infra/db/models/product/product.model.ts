@@ -1,13 +1,7 @@
-import {
-  Column,
-  Entity,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  Repository,
-} from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { UserModel } from '../user/user.model';
 
-@Entity('products', { schema: 'productSchema' })
+@Entity('products', { schema: 'ecommerce' })
 export class ProductModel {
   @PrimaryGeneratedColumn('increment', {
     name: 'id',
@@ -41,7 +35,7 @@ export class ProductModel {
 
   @OneToMany(
     () => UserModel,
-    (user) => user.productId,
+    (user) => user.product,
     {
       nullable: false,
       cascade: true,

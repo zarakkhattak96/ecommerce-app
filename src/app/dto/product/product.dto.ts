@@ -3,7 +3,7 @@ import { ID_SCHEMA, validateData } from '../utils';
 
 export class AddProductDto {
   private static schema = z.object({
-    id: z.number(),
+    id: z.number().optional(),
     make: z.string().nullable(),
     model: z.number().nullable(),
     price: z.number().nullable(),

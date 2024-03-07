@@ -2,17 +2,18 @@
 // import config from '../config';
 
 // const connectionString = config.DB_URL
-import pg from 'pg';
-import config from '../config';
+// import pg from 'pg';
+// import config from '../config';
+// import dbConfig from '../config/db.config';
 
-const { Client } = pg;
+// const { Client } = pg;
 
-const db = new Client({
-  connectionString: config.DB_URL,
-  password: config.POSTGRES_DB_PASSWORD,
-  // port: config.POSTGRES_DB_PORT
-  host: config.POSTGRES_DB_HOST,
-  user: config.POSTGRES_DB_USER,
-});
+// const db = new Client({
+//   connectionString: config.DB_URL,
+//   password: dbConfig.DB_PASSWORD,
+//   // port: config.POSTGRES_DB_PORT
+//   host: dbConfig.DB_HOST,
+//   user: dbConfig.DB_USER,
+// });
 
-export default db;
+// export default db;

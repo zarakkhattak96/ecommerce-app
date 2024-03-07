@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { ProductModel } from '../product/product.model';
 
-@Entity('user', { schema: 'userSchema' })
+@Entity('users', { schema: 'ecommerce' })
 export class UserModel {
   @PrimaryGeneratedColumn('increment', { name: 'id', type: 'integer' })
   id: number;
@@ -38,5 +38,5 @@ export class UserModel {
     (prodMod) => prodMod.users,
   )
   @JoinColumn({ name: 'product_id', referencedColumnName: 'id' })
-  productId: number;
+  product: number;
 }

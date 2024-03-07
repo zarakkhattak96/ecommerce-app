@@ -1,5 +1,5 @@
 export interface ProductInterface {
-  id: number;
+  id?: number;
   make: string | null;
   model: number | null;
   price: number | null;
