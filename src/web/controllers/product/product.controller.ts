@@ -17,11 +17,14 @@ export class ProductController {
   };
 
   removeProd = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.productId;
+
     const dto = DeleteProductDto.deleteProd(req.id, parseInt(id));
 
     const removeProd = await this.prodServ.removeProduct(dto);
 
-    return res.status(204).json(removeProd);
+    console.log(removeProd);
+
+    return res.json(removeProd);
   };
 }

@@ -10,7 +10,7 @@ export interface ProductInterface {
   isAvailable: boolean | null;
 }
 
-export abstract class ProductRepo {
+export abstract class ProductBaseRepo {
   abstract insert(product: ProductInterface): Promise<ProductInterface>;
   abstract fetch(id: number): Promise<ProductInterface> | null;
   abstract fetchAll(): Promise<ProductInterface[]>;

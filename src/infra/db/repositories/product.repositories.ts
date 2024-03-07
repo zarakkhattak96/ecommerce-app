@@ -2,12 +2,12 @@ import { Repository } from 'typeorm';
 import { AppError, NotFoundError } from '../../../app/app.errors';
 import {
   ProductInterface,
-  ProductRepo,
+  ProductBaseRepo,
 } from '../../../domain/interfaces/product/product.interface';
 
 import { ProductModel } from '../models/product/product.model';
 
-export class ProductRepositoryClass implements ProductRepo {
+export class ProductRepositoryClass implements ProductBaseRepo {
   private prodRepo: Repository<ProductModel>;
 
   constructor(repo: Repository<ProductModel>) {
@@ -44,7 +44,10 @@ export class ProductRepositoryClass implements ProductRepo {
   }
 
   async delete(id: number) {
-    const fetchProdById = await this.prodRepo.findOne({ where: { id: id } });
+    const fetchProdById = await this.prodRepo.findOne({
+      where: { id: id },
+      // relations: ['users'],  //TODO: To fix the relations issue between product and user: HINT: primary and foreign key constraints
+    });
 
     if (!fetchProdById)
       throw new NotFoundError(`No product found with id: ${id}`);

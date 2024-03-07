@@ -21,6 +21,7 @@ const bootstrap = async () => {
   app.use(bodyParser.urlencoded({ extended: false }));
 
   app.use('/api/products', userRouter);
+
   const PORT = config.PORT;
 
   app.listen(PORT, () => {

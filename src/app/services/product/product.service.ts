@@ -1,19 +1,28 @@
-import { ProductRepo } from '../../../domain/interfaces/product/product.interface';
+import { ProductBaseRepo } from '../../../domain/interfaces/product/product.interface';
 import { AddProductDto, DeleteProductDto } from '../../dto/product/product.dto';
 
 export class ProductService {
-  constructor(private readonly productRepo: ProductRepo) {} //TODO: confirm this
+  constructor(private readonly productRepo: ProductBaseRepo) {}
 
   async addProduct(prodDto: AddProductDto) {
-    const addProd = await this.productRepo.insert(prodDto.addProdDto);
-    return addProd;
+    await this.productRepo.insert(prodDto.addProdDto);
+
+    const fetchProds = await this.productRepo.fetchAll();
+
+    return {
+      products: fetchProds,
+    };
   }
 
   async removeProduct(prodDto: DeleteProductDto) {
     const { productId } = prodDto;
 
-    const removeProduct = await this.productRepo.delete(productId);
+    await this.productRepo.delete(productId);
 
-    return removeProduct;
+    const fetchProds = await this.productRepo.fetchAll();
+
+    return {
+      products: fetchProds,
+    };
   }
 }

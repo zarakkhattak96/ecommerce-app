@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ID_SCHEMA, validateData } from '../utils';
+import { ID_SCHEMA, validateData, validateId } from '../utils';
 
 export class AddProductDto {
   private static schema = z.object({
@@ -29,7 +29,7 @@ export class DeleteProductDto {
   private constructor(readonly contextId: string, readonly productId: number) {}
 
   static deleteProd(contextId: string, productId: number): DeleteProductDto {
-    const validProdId = validateData(ID_SCHEMA, productId);
+    const validProdId = validateId(productId);
 
     return new DeleteProductDto(contextId, validProdId);
   }
