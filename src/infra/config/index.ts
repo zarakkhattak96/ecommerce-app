@@ -1,4 +1,7 @@
 import * as dotenv from 'dotenv';
+import appConfig from './app.config';
+import dbConfig from './db.config';
+import authConfig from './auth.config';
 
 dotenv.config();
 
@@ -18,4 +21,7 @@ const PORT = getFromEnv('PORT');
 export default {
   DB_URL,
   PORT,
+  appConfig: appConfig,
+  dbConfig: dbConfig,
+  authConfig: authConfig,
 };

@@ -5,7 +5,7 @@ import { bootstrapRoutes } from './routes/product/product.routes';
 import { bootstrapDi } from '../infra/db/di/product/product.di';
 import contextIdGenerator from './middleware/context-id.middleware';
 import dotenv from 'dotenv';
-import ds from '../infra/config/connection.config';
+import { bootstrapAuthRoutes } from './routes/auth/login.routes';
 
 dotenv.config();
 export const app = express();
@@ -14,13 +14,15 @@ const bootstrap = async () => {
 
   const userRouter = bootstrapRoutes(diContainer.prodController);
 
+  const authRouter = bootstrapAuthRoutes(diContainer.authController);
+
   contextIdGenerator(app);
 
   app.use(express.json());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
 
-  app.use('/api/products', userRouter);
+  app.use('/api', userRouter, authRouter);
 
   const PORT = config.PORT;
 
