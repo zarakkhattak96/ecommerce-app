@@ -1,5 +1,12 @@
+import { NotFoundError } from '@app/app.errors';
 import { ProductBaseRepo } from '../../../domain/interfaces/product/product.interface';
-import { AddProductDto, DeleteProductDto } from '../../dto/product/product.dto';
+import {
+  AddProductDto,
+  DeleteProductDto,
+  GetProdById,
+  UpdateProductDto,
+} from '../../dto/product/product.dto';
+import { ProductRepositoryClass } from '@infra/db/repositories/product.repositories';
 
 export class ProductService {
   constructor(private readonly productRepo: ProductBaseRepo) {}
@@ -23,6 +30,43 @@ export class ProductService {
 
     return {
       products: fetchProds,
+    };
+  }
+
+  async fetchProducts() {
+    const products = await this.productRepo.fetchAll();
+
+    return {
+      products: products,
+    };
+  }
+
+  async fetchById(prodDto: GetProdById) {
+    const fetchProduct = await this.productRepo.fetch(prodDto.prodId);
+
+    return {
+      product: fetchProduct,
+    };
+  }
+
+  // TODO: to fix the update query
+
+  async updateProduct(prodDto: UpdateProductDto) {
+    const { ...prodData } = prodDto;
+
+    const updated = await this.productRepo.update(prodData.prodData);
+
+    console.log(updated, 'updated');
+
+    if (!updated) return;
+
+    const fetchProd = await this.productRepo.fetch(updated.id);
+
+    console.log(fetchProd, 'FETCH');
+    // if (!updated) throw new NotFoundError('asjkdh');
+
+    return {
+      product: fetchProd,
     };
   }
 }

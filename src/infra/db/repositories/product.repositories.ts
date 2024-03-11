@@ -8,20 +8,20 @@ import {
 import { ProductModel } from '../models/product/product.model';
 
 export class ProductRepositoryClass implements ProductBaseRepo {
-  private prodRepo: Repository<ProductModel>;
+  private prodBaseRepo: Repository<ProductModel>;
 
   constructor(repo: Repository<ProductModel>) {
-    this.prodRepo = repo;
+    this.prodBaseRepo = repo;
   }
 
   async insert(product: ProductInterface) {
-    const createProd = this.prodRepo.create(product);
+    const createProd = this.prodBaseRepo.create(product);
 
-    return await this.prodRepo.save(createProd);
+    return await this.prodBaseRepo.save(createProd);
   }
 
   async fetch(id: number) {
-    const fetchProd = await this.prodRepo.findOne({ where: { id: id } });
+    const fetchProd = await this.prodBaseRepo.findOne({ where: { id: id } });
 
     if (!fetchProd) throw new NotFoundError(`No product found with id: ${id}`);
 
@@ -29,22 +29,33 @@ export class ProductRepositoryClass implements ProductBaseRepo {
   }
 
   async fetchAll() {
-    const fetchProds = await this.prodRepo.find();
+    const fetchProds = await this.prodBaseRepo.find();
+
+    if (!fetchProds)
+      throw new NotFoundError('No products available at the moment');
+
     return fetchProds;
   }
 
+  //TODO: To fix the update query
   async update(prod: ProductInterface) {
-    await this.prodRepo.update({ id: prod.id }, prod);
+    console.log(prod.id, 'repos id');
 
-    const updated = await this.prodRepo.findOne({ where: { id: prod.id } });
+    await this.prodBaseRepo.update({ id: prod.id }, prod);
 
-    if (!updated) throw new AppError('Product cannot be updated');
+    const updatedProduct = await this.prodBaseRepo.findOne({
+      where: { id: prod.id },
+    });
+    // console.log(updated, 'UPDATE BODY');
 
-    return updated;
+    // console.log(updatedProduct, 'UPDATED');
+    if (!updatedProduct) throw new NotFoundError('No product was updated');
+
+    return updatedProduct;
   }
 
   async delete(id: number) {
-    const fetchProdById = await this.prodRepo.findOne({
+    const fetchProdById = await this.prodBaseRepo.findOne({
       where: { id: id },
       // relations: ['users'],  //TODO: To fix the relations issue between product and user: HINT: primary and foreign key constraints
     });
@@ -52,6 +63,6 @@ export class ProductRepositoryClass implements ProductBaseRepo {
     if (!fetchProdById)
       throw new NotFoundError(`No product found with id: ${id}`);
 
-    return await this.prodRepo.remove(fetchProdById);
+    return await this.prodBaseRepo.remove(fetchProdById);
   }
 }

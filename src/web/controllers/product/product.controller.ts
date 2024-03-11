@@ -1,6 +1,8 @@
 import {
   AddProductDto,
   DeleteProductDto,
+  GetProdById,
+  UpdateProductDto,
 } from '../../../app/dto/product/product.dto';
 import { ProductService } from '../../../app/services/product/product.service';
 import { Request, Response } from 'express';
@@ -23,8 +25,34 @@ export class ProductController {
 
     const removeProd = await this.prodServ.removeProduct(dto);
 
-    console.log(removeProd);
-
     return res.json(removeProd);
+  };
+
+  updateProds = async (req: Request, res: Response) => {
+    const prodId = req.params.productId;
+
+    const dto = UpdateProductDto.updateProd(req.id, parseInt(prodId), req.body);
+
+    // console.log(dto, 'DTO');
+
+    const updatedProd = await this.prodServ.updateProduct(dto);
+
+    return res.json(updatedProd);
+  };
+
+  getProds = async (req: Request, res: Response) => {
+    const prods = await this.prodServ.fetchProducts();
+
+    return res.status(200).json(prods);
+  };
+
+  getProdById = async (req: Request, res: Response) => {
+    const id = req.params.prodId;
+
+    const dto = GetProdById.fetchProd(req.id, parseInt(id));
+
+    const fetchProd = await this.prodServ.fetchById(dto);
+
+    return res.status(200).json(fetchProd);
   };
 }
