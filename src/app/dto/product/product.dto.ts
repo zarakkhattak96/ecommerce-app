@@ -16,7 +16,7 @@ export class AddProductDto {
   private constructor(
     readonly contextId: string,
     readonly addProdDto: Readonly<z.infer<typeof AddProductDto.schema>>,
-  ) {}
+  ) { }
 
   static addProd(contextId: string, data: unknown): AddProductDto {
     const { ...addProdDto } = validateData(AddProductDto.schema, data);
@@ -26,7 +26,7 @@ export class AddProductDto {
 }
 
 export class DeleteProductDto {
-  private constructor(readonly contextId: string, readonly productId: number) {}
+  private constructor(readonly contextId: string, readonly productId: number) { }
 
   static deleteProd(contextId: string, productId: number): DeleteProductDto {
     const validProdId = validateId(productId);
@@ -52,7 +52,7 @@ export class UpdateProductDto {
     readonly contextId: string,
     readonly productId: number,
     readonly prodData: Readonly<z.infer<typeof UpdateProductDto.schema>>,
-  ) {}
+  ) { }
 
   static updateProd(
     contextId: string,
@@ -68,7 +68,7 @@ export class UpdateProductDto {
 }
 
 export class GetProdsDto {
-  private constructor(readonly contextId: string, readonly data: unknown) {}
+  private constructor(readonly contextId: string, readonly data: unknown) { }
 
   static getProds(contextId: string, data: unknown): GetProdsDto {
     return new GetProdsDto(contextId, data);
@@ -76,7 +76,7 @@ export class GetProdsDto {
 }
 
 export class GetProdById {
-  private constructor(readonly contextId: string, readonly prodId: number) {}
+  private constructor(readonly contextId: string, readonly prodId: number) { }
 
   static fetchProd(contextId: string, prodId: number): GetProdById {
     const validId = validateId(prodId);
