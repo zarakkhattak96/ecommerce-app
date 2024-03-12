@@ -1,7 +1,7 @@
 import { Repository } from "typeorm";
 import { UserModel } from "../models/user/user.model";
 import { UserBaseRepo, UserInterface } from "@domain/interfaces/user/user.interface";
-import { NotFoundError } from "@app/app.errors";
+import { AlreadyExists, NotFoundError } from "@app/app.errors";
 
 
 
@@ -32,5 +32,14 @@ export class UserRepositoryClass implements UserBaseRepo {
     return fetchAllUsers
   }
 
+  async fetchByEmail(email: string) {
+
+    const fetchUserByEmail = await this.userRepo.findOne({ where: { email: email } });
+
+    if (!fetchUserByEmail) throw new NotFoundError("No user found with this email");
+
+    return fetchUserByEmail;
+
+  }
 
 }
