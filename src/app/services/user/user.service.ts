@@ -15,10 +15,19 @@ export class UserServiceClass {
     const { createData } = userDto;
 
     const userPassword = createData.password;
+    const confirmPassword = createData.confirmPassword;
 
-    let hashedPassword: string = "";
-    if (userPassword) {
-      hashedPassword = await this.passHashServ.hash(userPassword)
+
+    let hashedUserPassword: string = "";
+    let hashedConfirmPassword: string = "";
+    if(userPassword === confirmPassword){ 
+    
+    if (userPassword && confirmPassword) {
+      hashedUserPassword = await this.passHashServ.hash(userPassword);
+      hashedConfirmPassword = await this.passHashServ.hash(confirmPassword)
+
+      
+    }
     }
 
     const userEmail = createData.email;
@@ -32,11 +41,11 @@ export class UserServiceClass {
     if (emailExists) throw new AlreadyExists("A user with this email already exists")
 
 
-    const createUser = this.userBaseRepo.createUser({
+    const createUser = await this.userBaseRepo.createUser({
       firstName: createData.firstName,
       email: userEmail,
-      password: hashedPassword,
-      confirmPassword: createData.confirmPassword,
+      password: hashedUserPassword,
+      confirmPassword: hashedConfirmPassword,
       city: createData.city,
       address: createData.address,
       uuid: uuidv4(),
@@ -45,7 +54,7 @@ export class UserServiceClass {
       phoneNumber: createData.phoneNumber,
 
     })
-
+    
     return {
 
       user: createUser
