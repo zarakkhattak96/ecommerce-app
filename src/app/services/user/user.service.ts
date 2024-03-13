@@ -1,7 +1,7 @@
 import { CreateUserDto } from "@app/dto/user/user.dto";
 import { UserBaseRepo } from "@domain/interfaces/user/user.interface";
 import { PasswordHashingService } from "../password-hashing.service";
-import { AlreadyExists } from "@app/app.errors";
+import { AlreadyExists, InvalidData } from "@app/app.errors";
 import { v4 as uuidv4 } from "@napi-rs/uuid"
 
 
@@ -20,6 +20,10 @@ export class UserServiceClass {
 
     let hashedUserPassword: string = "";
     let hashedConfirmPassword: string = "";
+
+    if(userPassword !== confirmPassword){
+      throw new InvalidData("Passwords should be similar");
+    }
     if(userPassword === confirmPassword){ 
     
     if (userPassword && confirmPassword) {
