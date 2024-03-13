@@ -36,9 +36,12 @@ export class UserRepositoryClass implements UserBaseRepo {
 
     const fetchUserByEmail = await this.userRepo.findOne({ where: { email: email } });
 
-    if (!fetchUserByEmail) throw new NotFoundError("No user found with this email");
+    if (fetchUserByEmail ) {
 
-    return fetchUserByEmail;
+      throw new AlreadyExists("A user with this email already exists.")
+    }
+
+
 
   }
 

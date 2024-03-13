@@ -10,7 +10,7 @@ export class CreateUserDto {
     lastName: z.string().nullable(),
     email: z.string().nullable(),
     productId: z.number().nullable(),
-    uuid: z.string().uuid().nullable(),
+    uuid: z.string().uuid().nullable().optional(),
     phoneNumber: z.string().nullable(),
     address: z.string().nullable(),
     city: z.string().nullable(),

@@ -20,5 +20,5 @@ export abstract class UserBaseRepo {
 
   abstract createUser(user: UserInterface): Promise<UserInterface>;
   abstract fetchAllUsers(): Promise<UserInterface[]>;
-  abstract fetchByEmail(email: string): Promise<UserInterface> | null
+  abstract fetchByEmail(email: string): Promise<void> | null
 }
