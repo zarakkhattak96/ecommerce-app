@@ -22,8 +22,8 @@ export class UserModel {
   @Column('character varying', { name: 'email', nullable: true })
   email: string | null;
 
-  @Column('uuid', { name: 'uuid', nullable: true })
-  uuid: string | null = uuidv4();
+  @Column('uuid', { name: 'uuid' })
+  uuid: string  = uuidv4();
 
   @Column('character varying', { name: 'phone_number', nullable: true })
   phoneNumber: string | null;
@@ -37,8 +37,8 @@ export class UserModel {
   @Column('character varying', { name: 'city', nullable: true })
   city: string | null;
 
-  @Column('character varying', { name: 'password', nullable: true })
-  password: string | null;
+  @Column('character varying', { name: 'password', nullable: false })
+  password: string;
 
 
   @Column("character varying", { name: "confirm_password", nullable: true })

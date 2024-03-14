@@ -7,21 +7,70 @@
 // import { CreateUserDto, LoginDto } from '@app/dto/auth/auth.dto';
 // import { AuthRepositoryClass } from '@infra/db/repositories/auth.repository';
 // import { PasswordHashingService } from '../password-hashing.service';
+import { NotAuthorized, NotFoundError, AppError } from "@app/app.errors";
+import { PasswordHashingService } from "../password-hashing.service";
+import { UserServiceClass } from "../user/user.service";
+import { JwtService } from "../jwt.service";
+import { UserModel } from "@infra/db/models/user/user.model";
+import { LoginDto } from "@app/dto/auth/auth.dto";
+import { AuthRepositoryClass } from "@infra/db/repositories/auth.repository";
 
-// export type AuthResponseType = {
-//   redirectUrl?: string;
-//   status: string;
-//   email?: string;
-//   description?: string;
-//   message?: string;
-//   authToken?: string;
-//   statusCode?: Response['statusCode'];
-// };
+export type AuthResponseType = {
+  redirectUrl?: string;
+  status: string;
+  email?: string;
+  description?: string;
+  message?: string;
+  authToken?: string;
+  statusCode?: Response["status"];
+};
 
-// export const authError = (description: string, code: 'not_authorized') => {
-//   new NotAuthorized(description, code);
-// };
+const LOGIN_ERR = new AppError('Incorrect email/password', 'fail');
 
+
+export const authError = (description: string, code: 'not_authorized') => {
+  new NotAuthorized(description, code);
+};
+
+export class AuthService{
+
+  constructor(private readonly passServ: PasswordHashingService, private readonly userServ: UserServiceClass,
+    private readonly jwtServ: JwtService,
+    private readonly authRepo: AuthRepositoryClass){}
+
+ async loginUser(authUser: UserModel, userId: number){
+
+   const authToken = await this.jwtServ.sign({sub: authUser.uuid});
+   return {
+
+      message: "Successfully logged in",
+      status: 'Success',
+      authToken
+    } 
+  }
+
+
+  async login (authDto: LoginDto ){
+
+    const {email, password} = authDto;
+    
+    const authUser = await this.authRepo.getByEmail(email);
+
+    if(!authUser)throw new NotFoundError("User does not exist");
+
+    const verifyPassword = await this.passServ.verifyPassword(password, authUser.password);
+    
+    if(authUser && verifyPassword){
+
+     return await this.loginUser(authUser, authUser.id);
+    }
+
+    throw LOGIN_ERR;
+  }
+
+
+
+}
 // const checkToken = async (
 //   token: string,
 //   jwtServ: JwtService,
@@ -33,60 +82,4 @@
 //   }
 // };
 
-// const LOGIN_ERR = new AppError('Incorrect email/password', 'fail');
 
-// export class AuthService {
-//   private readonly tokenToUserPromise: NodeCache;
-//   constructor(
-//     readonly authRepo: AuthRepositoryClass,
-//     readonly jwtServ?: JwtService,
-//     readonly passServ?: PasswordHashingService,
-//   ) {
-//     this.tokenToUserPromise = new NodeCache({
-//       maxKeys: 2000,
-//       stdTTL: config.authConfig.JWT_EXPIRATION_SECONDS,
-//       useClones: false,
-//       deleteOnExpire: true,
-//       checkperiod: 3600,
-//     });
-//   }
-
-//   async loginUser(
-//     authUser: UserModel,
-//     userId: number,
-//   ): Promise<AuthResponseType> {
-//     const authToken = await this.jwtServ?.sign({
-//       sub: authUser.uuid,
-//     });
-
-//     return {
-//       message: 'Successfully logged in',
-//       status: 'success',
-//       authToken,
-//     };
-//   }
-
-//   // async createUser(createUser: CreateUserDto) {}
-
-//   async login(loginDto: LoginDto) {
-//     const { email, password, user } = loginDto;
-
-//     const authUser = await this.authRepo.getByEmail(email);
-
-//     if (!authUser) throw new NotFoundError('User not found');
-
-//     const verifyPassword = await this.passServ?.verifyPassword(
-//       password,
-//       authUser.password,
-//     );
-
-//     if (authUser && verifyPassword) {
-//       return await this.loginUser(authUser, user.id);
-//     }
-
-//     // if (!authUser) {
-//     // }
-
-//     throw LOGIN_ERR;
-//   }
-// }
