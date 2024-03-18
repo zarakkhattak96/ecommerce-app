@@ -19,13 +19,13 @@ export class UserRepositoryClass implements UserBaseRepo {
     const createUser = this.userRepo.create(userInterface);
 
 
-    return await this.userRepo.save(createUser, { reload: true })
+    return  await this.userRepo.save(createUser, { reload: true })
   }
 
 
   async fetchAllUsers() {
 
-    const fetchAllUsers = await this.userRepo.find();
+    const fetchAllUsers = await this.userRepo.find({relations: ["product"]});
 
     if (!fetchAllUsers) throw new NotFoundError("No users found in the database")
 
@@ -34,7 +34,7 @@ export class UserRepositoryClass implements UserBaseRepo {
 
   async fetchByEmail(email: string) {
 
-    const fetchUserByEmail = await this.userRepo.findOne({ where: { email: email } });
+    const fetchUserByEmail = await this.userRepo.findOne({ where: { email: email }, relations: ["product"] });
 
     if (fetchUserByEmail ) {
 

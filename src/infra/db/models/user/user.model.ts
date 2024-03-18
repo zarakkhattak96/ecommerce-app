@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -10,7 +11,7 @@ import { v4 as uuidv4 } from '@napi-rs/uuid';
 
 @Entity('users', { schema: 'ecommerce' })
 export class UserModel {
-  @PrimaryGeneratedColumn('increment', { name: 'id', type: 'integer' })
+  @PrimaryGeneratedColumn('increment', { name: 'id', type: 'integer', primaryKeyConstraintName: "users_pkey" })
   id: number;
 
   @Column('character varying', { name: 'first_name', nullable: true })

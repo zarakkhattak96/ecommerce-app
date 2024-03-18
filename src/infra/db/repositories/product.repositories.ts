@@ -21,7 +21,7 @@ export class ProductRepositoryClass implements ProductBaseRepo {
   }
 
   async fetch(id: number) {
-    const fetchProd = await this.prodBaseRepo.findOne({ where: { id: id } });
+    const fetchProd = await this.prodBaseRepo.findOne({ where: { id: id }, relations: ["users" ] });
 
     if (!fetchProd) throw new NotFoundError(`No product found with id: ${id}`);
 
@@ -29,7 +29,7 @@ export class ProductRepositoryClass implements ProductBaseRepo {
   }
 
   async fetchAll() {
-    const fetchProds = await this.prodBaseRepo.find();
+    const fetchProds = await this.prodBaseRepo.find({relations: ["users"]});
 
     if (!fetchProds)
       throw new NotFoundError('No products available at the moment');
@@ -45,6 +45,7 @@ export class ProductRepositoryClass implements ProductBaseRepo {
 
     const updatedProduct = await this.prodBaseRepo.findOne({
       where: { id: prod.id },
+      relations: ["users"]
     });
     // console.log(updated, 'UPDATE BODY');
 
@@ -57,7 +58,7 @@ export class ProductRepositoryClass implements ProductBaseRepo {
   async delete(id: number) {
     const fetchProdById = await this.prodBaseRepo.findOne({
       where: { id: id },
-      // relations: ['users'],  //TODO: To fix the relations issue between product and user: HINT: primary and foreign key constraints
+      relations: ['users'],  
     });
 
     if (!fetchProdById)

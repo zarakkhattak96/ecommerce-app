@@ -8,6 +8,8 @@ import { UserModel } from '@infra/db/models/user/user.model';
 import { UserServiceClass } from '@app/services/user/user.service';
 import { UserController } from '@web/controllers/users/user.controller';
 import { PasswordHashingBcrypt } from '@infra/password-hashing';
+import { AuthService } from '@app/services/auth/auth.service';
+import { AuthRepositoryClass } from '@infra/db/repositories/auth.repository';
 // import { AuthController } from '@web/controllers/auth/auth.controller';
 // import { AuthRepositoryClass } from '@infra/db/repositories/auth.repository';
 // import { UserModel } from '@infra/db/models/user/user.model';
@@ -26,11 +28,17 @@ export const bootstrapDi = () => {
     ds.getRepository(UserModel),
   );
 
-  const passServ: PasswordHashingBcrypt = new PasswordHashingBcrypt() //TODO: confirm this, are all the classes initialized here in the bootstrapDi?
+  const passServ: PasswordHashingBcrypt = new PasswordHashingBcrypt(); //TODO: confirm this, are all the classes initialized here in the bootstrapDi?
+
+  const authRepo: AuthRepositoryClass = new AuthRepositoryClass(
+    ds.getRepository(UserModel),
+  );
+
+  const authServ: AuthService = new AuthService(passServ, authRepo);
 
   const userServ: UserServiceClass = new UserServiceClass(userRepo, passServ);
 
-  const userController: UserController = new UserController(userServ)
+  const userController: UserController = new UserController(userServ, authServ);
   // const authServ: AuthService = new AuthService(authRepo);
 
   // const authController: AuthController = new AuthController(authServ);

@@ -7,11 +7,11 @@ export interface UserInterface {
   lastName: string | null,
   email: string | null,
   productId: number | null,
-  uuid: string | null,
+  uuid: string,
   phoneNumber: string | null,
   address: string | null,
   city: string | null,
-  password: string | null,
+  password: string,
   confirmPassword: string | null,
 }
 

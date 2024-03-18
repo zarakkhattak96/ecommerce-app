@@ -12,8 +12,7 @@ export class AuthRepositoryClass {
   async getByEmail(email: string): Promise<UserModel | null> {
     const user = await this.userBaseRepo.findOne({ where: { email: email } });
 
-    if (!user)
-      throw new NotFoundError("No user found with the provided email");
+    if (!user) throw new NotFoundError('No user found with the provided email');
 
     return user;
   }
