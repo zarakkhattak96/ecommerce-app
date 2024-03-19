@@ -1,6 +1,6 @@
 export interface JwtPayload {
   sub: string;
-  //   app_metadata?: { organization_ids: number[] };
+  // secret: string;
 }
 
 export abstract class JwtService {

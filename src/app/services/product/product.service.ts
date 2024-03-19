@@ -7,7 +7,9 @@ import {
   UpdateProductDto,
 } from '../../dto/product/product.dto';
 import { ProductRepositoryClass } from '@infra/db/repositories/product.repositories';
+import { autoInjectable } from 'tsyringe';
 
+@autoInjectable()
 export class ProductService {
   constructor(private readonly productRepo: ProductBaseRepo) {}
 

@@ -4,6 +4,8 @@ import { PasswordHashingService } from '../password-hashing.service';
 import { JwtService } from '../jwt.service';
 import { LoginDto } from '@app/dto/auth/auth.dto';
 import { AuthRepositoryClass } from '@infra/db/repositories/auth.repository';
+import config from '@infra/config';
+import { autoInjectable, inject } from 'tsyringe';
 
 export type AuthResponseType = {
   redirectUrl?: string;
@@ -21,9 +23,10 @@ export const authError = (description: string, code: 'not_authorized') => {
   new NotAuthorized(description, code);
 };
 
+@autoInjectable()
 export class AuthService {
   constructor(
-    private readonly passServ: PasswordHashingService,
+    @inject("PasswordHashingService") private readonly passServ: PasswordHashingService,
     private readonly authRepo: AuthRepositoryClass,
     private readonly jwtServ?: JwtService,
   ) {}
@@ -39,7 +42,13 @@ export class AuthService {
       password,
       authUser.password,
     );
-    const authToken = await this.jwtServ?.sign({ sub: authUser.uuid });
+
+    const authToken = await this.jwtServ?.sign({
+      // secret: config.authConfig.JWT_SECRET,
+      sub: authUser.uuid,
+    });
+
+    console.log(authToken, 'AUTH TOKEN');
 
     if (authUser && verifyPassword) {
       return {

@@ -1,37 +1,34 @@
-import { CreateUserDto } from "@app/dto/user/user.dto";
-import { UserBaseRepo } from "@domain/interfaces/user/user.interface";
-import { PasswordHashingService } from "../password-hashing.service";
-import { AlreadyExists, InvalidData } from "@app/app.errors";
-import { v4 as uuidv4 } from "@napi-rs/uuid"
+import { CreateUserDto } from '@app/dto/user/user.dto';
+import { UserBaseRepo } from '@domain/interfaces/user/user.interface';
+import { PasswordHashingService } from '../password-hashing.service';
+import { AlreadyExists, InvalidData } from '@app/app.errors';
+import { v4 as uuidv4 } from '@napi-rs/uuid';
+import { autoInjectable, inject } from 'tsyringe';
 
-
+@autoInjectable()
 export class UserServiceClass {
-
-  constructor(private readonly userBaseRepo: UserBaseRepo, private readonly passHashServ: PasswordHashingService) { }
-
+  constructor(
+    @inject("PasswordHashingService") private readonly passHashServ: PasswordHashingService,
+    private readonly userBaseRepo: UserBaseRepo,
+  ) {}
 
   async createUser(userDto: CreateUserDto) {
-
     const { createData } = userDto;
 
     const userPassword = createData.password;
     const confirmPassword = createData.confirmPassword;
 
+    let hashedUserPassword: string = '';
+    let hashedConfirmPassword: string = '';
 
-    let hashedUserPassword: string = "";
-    let hashedConfirmPassword: string = "";
-
-    if(userPassword !== confirmPassword){
-      throw new InvalidData("Passwords should be similar");
+    if (userPassword !== confirmPassword) {
+      throw new InvalidData('Passwords should be similar');
     }
-    if(userPassword === confirmPassword){ 
-    
-    if (userPassword && confirmPassword) {
-      hashedUserPassword = await this.passHashServ.hash(userPassword);
-      hashedConfirmPassword = await this.passHashServ.hash(confirmPassword)
-
-      
-    }
+    if (userPassword === confirmPassword) {
+      if (userPassword && confirmPassword) {
+        hashedUserPassword = await this.passHashServ.hash(userPassword);
+        hashedConfirmPassword = await this.passHashServ.hash(confirmPassword);
+      }
     }
 
     const userEmail = createData.email;
@@ -39,11 +36,10 @@ export class UserServiceClass {
     let emailExists;
     if (userEmail) {
       emailExists = await this.userBaseRepo.fetchByEmail(userEmail);
-
     }
 
-    if (emailExists) throw new AlreadyExists("A user with this email already exists")
-
+    if (emailExists)
+      throw new AlreadyExists('A user with this email already exists');
 
     const createUser = await this.userBaseRepo.createUser({
       firstName: createData.firstName,
@@ -56,14 +52,10 @@ export class UserServiceClass {
       lastName: createData.lastName,
       productId: createData.productId,
       phoneNumber: createData.phoneNumber,
+    });
 
-    })
-    
     return {
-
-      user: createUser
-    }
-
-
+      user: createUser,
+    };
   }
 }

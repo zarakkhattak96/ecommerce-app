@@ -4,12 +4,13 @@ import { UserServiceClass } from '@app/services/user/user.service';
 import { Request, Response } from 'express';
 import { LoginDto } from '@app/dto/auth/auth.dto';
 import authConfig from '@infra/config/auth.config';
-// import { AuthRepositoryClass } from '@infra/db/repositories/auth.repository';
+import { autoInjectable, inject } from 'tsyringe';
 
+@autoInjectable()
 export class UserController {
   constructor(
-    private readonly userServ: UserServiceClass,
-    private readonly authServ: AuthService,
+    @inject("UserServiceClass") private readonly userServ: UserServiceClass,
+    @inject("AuthService") private readonly authServ: AuthService,
   ) {}
 
   createUser = async (req: Request, res: Response) => {
@@ -23,6 +24,8 @@ export class UserController {
   login = async (req: Request, res: Response) => {
     const dto = LoginDto.create(req.body, req._user);
 
+    // console.log(req, 'REQUEST');
+
     const resp = await this.authServ.login(dto);
 
     const resps = resp as AuthResponseType;
@@ -32,8 +35,10 @@ export class UserController {
         res.status(307).send(resp); // temporary redirect
       }
     }
-
+    console.log(resps, 'RESPS');
     const { authToken, message, status } = resps;
+
+    console.log(authToken, 'AUTH TOKEN FROM CONTROLLER');
 
     if (authToken) {
       res.cookie('token', authToken, {
@@ -45,6 +50,8 @@ export class UserController {
         domain: req.hostname,
       });
     }
+
+    console.log(req.cookies, 'COOKIES');
 
     return res.status(200).send({ message, status });
   };

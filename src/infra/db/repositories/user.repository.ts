@@ -1,48 +1,43 @@
-import { Repository } from "typeorm";
-import { UserModel } from "../models/user/user.model";
-import { UserBaseRepo, UserInterface } from "@domain/interfaces/user/user.interface";
-import { AlreadyExists, NotFoundError } from "@app/app.errors";
+import { Repository } from 'typeorm';
+import { UserModel } from '../models/user/user.model';
+import {
+  UserBaseRepo,
+  UserInterface,
+} from '@domain/interfaces/user/user.interface';
+import { AlreadyExists, NotFoundError } from '@app/app.errors';
+import { autoInjectable } from 'tsyringe';
 
-
-
+// @autoInjectable()
 export class UserRepositoryClass implements UserBaseRepo {
-
   private userRepo: Repository<UserModel>;
 
   constructor(repo: Repository<UserModel>) {
-
     this.userRepo = repo;
   }
 
   async createUser(userInterface: UserInterface) {
-
     const createUser = this.userRepo.create(userInterface);
 
-
-    return  await this.userRepo.save(createUser, { reload: true })
+    return await this.userRepo.save(createUser, { reload: true });
   }
 
-
   async fetchAllUsers() {
+    const fetchAllUsers = await this.userRepo.find({ relations: ['product'] });
 
-    const fetchAllUsers = await this.userRepo.find({relations: ["product"]});
+    if (!fetchAllUsers)
+      throw new NotFoundError('No users found in the database');
 
-    if (!fetchAllUsers) throw new NotFoundError("No users found in the database")
-
-    return fetchAllUsers
+    return fetchAllUsers;
   }
 
   async fetchByEmail(email: string) {
+    const fetchUserByEmail = await this.userRepo.findOne({
+      where: { email: email },
+      relations: ['product'],
+    });
 
-    const fetchUserByEmail = await this.userRepo.findOne({ where: { email: email }, relations: ["product"] });
-
-    if (fetchUserByEmail ) {
-
-      throw new AlreadyExists("A user with this email already exists.")
+    if (fetchUserByEmail) {
+      throw new AlreadyExists('A user with this email already exists.');
     }
-
-
-
   }
-
 }

@@ -1,3 +1,4 @@
+import { autoInjectable, inject } from 'tsyringe';
 import {
   AddProductDto,
   DeleteProductDto,
@@ -7,8 +8,11 @@ import {
 import { ProductService } from '../../../app/services/product/product.service';
 import { Request, Response } from 'express';
 
+@autoInjectable()
 export class ProductController {
-  constructor(private readonly prodServ: ProductService) {}
+  constructor(
+    @inject("ProductService") private readonly prodServ: ProductService,
+  ) {}
 
   addProd = async (req: Request, res: Response) => {
     const prodDto = AddProductDto.addProd(req.id, req.body);
