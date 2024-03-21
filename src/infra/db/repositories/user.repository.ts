@@ -41,4 +41,13 @@ export class UserRepositoryClass implements UserBaseRepoInterface {
       throw new AlreadyExists('A user with this email already exists.');
     }
   }
+
+  async fetchById(id: number) {
+  
+    const fetchUser = await this.userRepo.findOne({where: {id: id}});
+
+    if(!fetchUser) throw new NotFoundError(`No user found with id: ${id}`);
+
+    return fetchUser;
+  }
 }

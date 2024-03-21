@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { validateData } from "../utils";
+import { ID_SCHEMA, validateData, validateId } from "../utils";
 
 
 export class CreateUserDto {
@@ -36,5 +36,17 @@ export class FetchAllUsersDto{
   static fetchAll(contextId: string, ): FetchAllUsersDto{
 
     return new FetchAllUsersDto(contextId)
+  }
+}
+
+export class FetchUserDto{
+
+  private constructor (readonly contextId: string, readonly userId: number){}
+
+  static fetchUser(contextId: string, userId: number): FetchUserDto{
+
+    const validId = validateId(userId);
+
+    return new FetchUserDto(contextId, validId)
   }
 }

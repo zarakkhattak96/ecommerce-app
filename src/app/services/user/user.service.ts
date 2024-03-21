@@ -1,4 +1,4 @@
-import { CreateUserDto, FetchAllUsersDto } from '@app/dto/user/user.dto';
+import { CreateUserDto, FetchAllUsersDto, FetchUserDto } from '@app/dto/user/user.dto';
 import { UserBaseRepoInterface } from '@domain/interfaces/user/user.interface';
 import { AlreadyExists, InvalidData, NotFoundError } from '@app/app.errors';
 import { v4 as uuidv4 } from '@napi-rs/uuid';
@@ -66,5 +66,17 @@ export class UserServiceClass {
     if(!allUsers) throw new NotFoundError("No users data exists in the database");
 
     return allUsers;
+  }
+
+  async fetchUser(userDto: FetchUserDto){
+    const {userId} = userDto
+
+    const fetchUser = await this.userBaseRepo.fetchById(userId);
+
+    if(!fetchUser) throw new NotFoundError(`No user found with id: ${userId}`)
+
+    return fetchUser;
+
+
   }
 }

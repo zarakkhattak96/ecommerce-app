@@ -12,6 +12,7 @@ export const bootstrapUserRoutes = (userController: UserController) => {
 
   router.get("/users/", userController.fetchAllUsers)
 
+  router.get("/users/:userId", userController.fetchUserById)
   return router
 
 

@@ -1,4 +1,4 @@
-import { CreateUserDto, FetchAllUsersDto } from '@app/dto/user/user.dto';
+import { CreateUserDto, FetchAllUsersDto, FetchUserDto } from '@app/dto/user/user.dto';
 import { AuthService, AuthResponseType } from '@app/services/auth/auth.service';
 import { UserServiceClass } from '@app/services/user/user.service';
 import { Request, Response } from 'express';
@@ -63,5 +63,16 @@ export class UserController {
     return res.status(200).send(allUsers)
     
 
+  }
+
+  fetchUserById = async(req: Request, res: Response)=> {
+
+    const userId = req.params.userId;
+
+    const dto = FetchUserDto.fetchUser(req.id, parseInt(userId));
+
+    const userFound = await this.userServ.fetchUser(dto);
+
+    return res.status(200).send(userFound);
   }
 }

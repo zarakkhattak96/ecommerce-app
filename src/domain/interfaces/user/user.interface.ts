@@ -16,4 +16,5 @@ export interface UserBaseRepoInterface {
   createUser(user: UserInterface): Promise<UserInterface>;
   fetchAllUsers(): Promise<UserInterface[]>;
   fetchByEmail(email: string): Promise<void> | null;
+  fetchById(id: number): Promise<UserInterface>| null
 }
