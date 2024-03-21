@@ -1,15 +1,16 @@
 import { CreateUserDto } from '@app/dto/user/user.dto';
-import { UserBaseRepo } from '@domain/interfaces/user/user.interface';
+import { UserBaseRepoInterface } from '@domain/interfaces/user/user.interface';
 import { PasswordHashingService } from '../password-hashing.service';
 import { AlreadyExists, InvalidData } from '@app/app.errors';
 import { v4 as uuidv4 } from '@napi-rs/uuid';
-import { autoInjectable, inject } from 'tsyringe';
+import { autoInjectable, inject, injectable } from 'tsyringe';
+import { PasswordHashingBcrypt } from '@infra/password-hashing';
 
-@autoInjectable()
+@injectable()
 export class UserServiceClass {
   constructor(
-    @inject("PasswordHashingService") private readonly passHashServ: PasswordHashingService,
-    private readonly userBaseRepo: UserBaseRepo,
+    @inject("UserBaseRepoInterface") private readonly userBaseRepo: UserBaseRepoInterface,
+    @inject("PasswordHashingBcrypt") private readonly passHashServ: PasswordHashingBcrypt,
   ) {}
 
   async createUser(userDto: CreateUserDto) {
@@ -18,8 +19,8 @@ export class UserServiceClass {
     const userPassword = createData.password;
     const confirmPassword = createData.confirmPassword;
 
-    let hashedUserPassword: string = '';
-    let hashedConfirmPassword: string = '';
+    let hashedUserPassword = '';
+    let hashedConfirmPassword = '';
 
     if (userPassword !== confirmPassword) {
       throw new InvalidData('Passwords should be similar');

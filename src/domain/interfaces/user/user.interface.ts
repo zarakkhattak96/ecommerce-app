@@ -12,8 +12,8 @@ export interface UserInterface {
   confirmPassword: string | null;
 }
 
-export abstract class UserBaseRepo {
-  abstract createUser(user: UserInterface): Promise<UserInterface>;
-  abstract fetchAllUsers(): Promise<UserInterface[]>;
-  abstract fetchByEmail(email: string): Promise<void> | null;
+export interface UserBaseRepoInterface {
+  createUser(user: UserInterface): Promise<UserInterface>;
+  fetchAllUsers(): Promise<UserInterface[]>;
+  fetchByEmail(email: string): Promise<void> | null;
 }

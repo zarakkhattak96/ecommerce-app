@@ -3,6 +3,7 @@ import { ProductController } from '../../controllers/product/product.controller'
 
 export const router = Router();
 export const bootstrapRoutes = (prodController: ProductController): Router => {
+ 
   router.post('/products/addProduct', prodController.addProd);
 
   router.delete('/products/:productId', prodController.removeProd);

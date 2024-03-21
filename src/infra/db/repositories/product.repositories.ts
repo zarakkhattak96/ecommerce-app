@@ -2,19 +2,19 @@ import { Repository } from 'typeorm';
 import { AppError, NotFoundError } from '../../../app/app.errors';
 import {
   ProductInterface,
-  ProductBaseRepo,
+  ProductBaseRepoInterface,
 } from '../../../domain/interfaces/product/product.interface';
 
 import { ProductModel } from '../models/product/product.model';
+import { autoInjectable, delay, inject, injectable, singleton } from 'tsyringe';
 
-export class ProductRepositoryClass implements ProductBaseRepo {
-  private prodBaseRepo: Repository<ProductModel>;
-
-  constructor(repo: Repository<ProductModel>) {
-    this.prodBaseRepo = repo;
-  }
+@autoInjectable()
+// @singleton()
+export class ProductRepositoryClass implements ProductBaseRepoInterface {
+  constructor(private readonly prodBaseRepo: Repository<ProductModel>) {}
 
   async insert(product: ProductInterface) {
+    console.log(this.prodBaseRepo, 'REPO');
     const createProd = this.prodBaseRepo.create(product);
 
     return await this.prodBaseRepo.save(createProd);

@@ -1,21 +1,23 @@
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { UserModel } from '../models/user/user.model';
 import {
-  UserBaseRepo,
+  UserBaseRepoInterface,
   UserInterface,
 } from '@domain/interfaces/user/user.interface';
 import { AlreadyExists, NotFoundError } from '@app/app.errors';
-import { autoInjectable } from 'tsyringe';
+import { injectable } from 'tsyringe';
+import ds from '@infra/config/connection.config';
 
-// @autoInjectable()
-export class UserRepositoryClass implements UserBaseRepo {
+@injectable()
+export class UserRepositoryClass implements UserBaseRepoInterface {
   private userRepo: Repository<UserModel>;
 
-  constructor(repo: Repository<UserModel>) {
-    this.userRepo = repo;
+  constructor() {
+    this.userRepo = new Repository(UserModel, new EntityManager(ds));
   }
 
   async createUser(userInterface: UserInterface) {
+    console.log(this.userRepo, 'USER REPo');
     const createUser = this.userRepo.create(userInterface);
 
     return await this.userRepo.save(createUser, { reload: true });

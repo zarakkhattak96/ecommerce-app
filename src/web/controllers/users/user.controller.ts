@@ -4,13 +4,13 @@ import { UserServiceClass } from '@app/services/user/user.service';
 import { Request, Response } from 'express';
 import { LoginDto } from '@app/dto/auth/auth.dto';
 import authConfig from '@infra/config/auth.config';
-import { autoInjectable, inject } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
-@autoInjectable()
+@injectable()
 export class UserController {
   constructor(
     @inject("UserServiceClass") private readonly userServ: UserServiceClass,
-    @inject("AuthService") private readonly authServ: AuthService,
+    private readonly authServ: AuthService,
   ) {}
 
   createUser = async (req: Request, res: Response) => {
@@ -23,8 +23,6 @@ export class UserController {
 
   login = async (req: Request, res: Response) => {
     const dto = LoginDto.create(req.body, req._user);
-
-    // console.log(req, 'REQUEST');
 
     const resp = await this.authServ.login(dto);
 

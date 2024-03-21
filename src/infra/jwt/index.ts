@@ -1,7 +1,7 @@
 import { JwtPayload, JwtService } from '@app/services/jwt.service';
 import authConfig from '@infra/config/auth.config';
 import { createSigner, createVerifier } from 'fast-jwt';
-import { Provider } from 'tsyringe';
+import { autoInjectable, Provider } from 'tsyringe';
 
 const signer = createSigner({
   expiresIn: authConfig.JWT_EXPIRATION_SECONDS,
@@ -14,6 +14,7 @@ const verifier = createVerifier({
   cache: true,
 });
 
+@autoInjectable()
 export class JwtServiceProv extends JwtService {
   async sign(payload: JwtPayload): Promise<string> {
     return signer(payload);
@@ -27,7 +28,3 @@ export class JwtServiceProv extends JwtService {
     return { payload: res as JwtPayload, expiresAt: res.exp };
   }
 }
-
-// export const JwtServiceProvider: Provider<JwtService> = {
-//   useClass: JwtServiceProv,
-// };

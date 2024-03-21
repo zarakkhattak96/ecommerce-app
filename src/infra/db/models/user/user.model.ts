@@ -8,10 +8,13 @@ import {
 } from 'typeorm';
 import { ProductModel } from '../product/product.model';
 import { v4 as uuidv4 } from '@napi-rs/uuid';
-
 @Entity('users', { schema: 'ecommerce' })
 export class UserModel {
-  @PrimaryGeneratedColumn('increment', { name: 'id', type: 'integer', primaryKeyConstraintName: "users_pkey" })
+  @PrimaryGeneratedColumn('increment', {
+    name: 'id',
+    type: 'integer',
+    primaryKeyConstraintName: 'users_pkey',
+  })
   id: number;
 
   @Column('character varying', { name: 'first_name', nullable: true })
@@ -24,7 +27,7 @@ export class UserModel {
   email: string | null;
 
   @Column('uuid', { name: 'uuid' })
-  uuid: string  = uuidv4();
+  uuid: string = uuidv4();
 
   @Column('character varying', { name: 'phone_number', nullable: true })
   phoneNumber: string | null;
@@ -41,8 +44,7 @@ export class UserModel {
   @Column('character varying', { name: 'password', nullable: false })
   password: string;
 
-
-  @Column("character varying", { name: "confirm_password", nullable: true })
+  @Column('character varying', { name: 'confirm_password', nullable: true })
   confirmPassword: string | null;
 
   @ManyToOne(

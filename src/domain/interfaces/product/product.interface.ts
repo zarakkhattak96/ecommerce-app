@@ -10,10 +10,10 @@ export interface ProductInterface {
   isAvailable: boolean | null;
 }
 
-export abstract class ProductBaseRepo {
-  abstract insert(product: ProductInterface): Promise<ProductInterface>;
-  abstract fetch(id: number | undefined): Promise<ProductInterface> | null;
-  abstract fetchAll(): Promise<ProductInterface[]>;
-  abstract update(prod: ProductInterface): Promise<ProductInterface>;
-  abstract delete(id: number): Promise<ProductInterface>;
+export  interface ProductBaseRepoInterface {
+  insert(product: ProductInterface): Promise<ProductInterface>;
+  fetch(id: number | undefined): Promise<ProductInterface> | null;
+  fetchAll(): Promise<ProductInterface[]>;
+  update(prod: ProductInterface): Promise<ProductInterface>;
+ delete(id: number): Promise<ProductInterface>;
 }

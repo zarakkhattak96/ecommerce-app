@@ -1,110 +1,80 @@
-import { AuthService } from '@app/services/auth/auth.service';
+import { JwtService } from '@app/services/jwt.service';
+import { PasswordHashingService } from '@app/services/password-hashing.service';
 import { ProductService } from '@app/services/product/product.service';
 import { UserServiceClass } from '@app/services/user/user.service';
-import {
-  UserBaseRepo,
-  //   UserBaseRepoInterface,
-} from '@domain/interfaces/user/user.interface';
+import { ProductBaseRepoInterface } from '@domain/interfaces/product/product.interface';
+import { UserBaseRepoInterface } from '@domain/interfaces/user/user.interface';
+import ds from '@infra/config/connection.config';
+import { UserModel } from '@infra/db/models/user/user.model';
+import { AuthRepositoryClass } from '@infra/db/repositories/auth.repository';
 import { ProductRepositoryClass } from '@infra/db/repositories/product.repositories';
 import { UserRepositoryClass } from '@infra/db/repositories/user.repository';
 import { JwtServiceProv } from '@infra/jwt';
 import { PasswordHashingBcrypt } from '@infra/password-hashing';
-import { ProductController } from '@web/controllers/product/product.controller';
-import { UserController } from '@web/controllers/users/user.controller';
 import { container } from 'tsyringe';
 
 const bootstrapDiRegister = async () => {
-  // services
-  const authServRegister = container.register<AuthService>('AuthService', {
-    useClass: AuthService,
+  const userRepoInterface = container.register('UserBaseRepoInterface', {
+    useClass: UserRepositoryClass,
   });
 
-  const productServRegister = container.register<ProductService>(
-    'ProductService',
-    {
-      useClass: ProductService,
-    },
+  const prodRepoInterface = container.register<ProductBaseRepoInterface>(
+    'ProductBaseRepoInterface',
+    { useClass: ProductRepositoryClass },
+  );
+  //   const authRepo = container.register<AuthRepositoryClass>(
+  //     'AuthRepositoryClass',
+  //     { useClass: AuthRepositoryClass },
+  //   );
+
+  // const userRepo = container.register<UserRepositoryClass>(
+  //   'UserRepositoryClass',
+  //   { useClass: UserRepositoryClass },
+  // );
+
+  const prodRepo = container.register<ProductBaseRepoInterface>(
+    'ProductBaseRepoInterface',
+    ProductRepositoryClass,
   );
 
-  const userServiceRegister = container.register<UserServiceClass>(
-    'UserServiceClass',
-    {
-      useClass: UserServiceClass,
-    },
+  const userServ = container.register<UserServiceClass>('UserServiceClass', {
+    useClass: UserServiceClass,
+  });
+
+  const prodServ = container.register<ProductService>('ProductService', {
+    useClass: ProductService,
+  });
+
+  const passHashServ = container.register<PasswordHashingService>(
+    'PasswordHashingBcrypt',
+    { useClass: PasswordHashingBcrypt },
   );
 
-  const passHashingServRegister = container.register<PasswordHashingBcrypt>(
-    'PasswordHashingService',
-    {
-      useClass: PasswordHashingBcrypt,
-    },
-  );
-
-  const jwtServRegister = container.register<JwtServiceProv>('JwtServiceProv', {
+  const jwtServ = container.register<JwtService>('JwtService', {
     useClass: JwtServiceProv,
   });
 
-  //   controller
+  // const userRepo = container.register<UserRepositoryClass>('UserRepository', {
+  //   useFactory: () => {
+  //     const userRepo = new UserRepositoryClass(ds.getRepository(UserModel));
+  //     return userRepo;
+  //   },
+  // });
 
-  const authControllerRegister = container.register<UserController>(
-    'UserController',
-    {
-      useClass: UserController,
-    },
-  );
+  // const userRepo = container.register('UserModel', {
+  //   useClass: UserModel,
+  // });
 
-  const prodControllerRegister = container.register<ProductController>(
-    'ProductController',
-    {
-      useClass: ProductController,
-    },
-  );
-
-  const userController = container.register<UserController>('UserController', {
-    useClass: UserController,
-  });
-
-  //   repositories
-
-  const userRepoRegister = container.register<UserRepositoryClass>(
-    'UserRepositoryClass',
-    {
-      useClass: UserRepositoryClass,
-    },
-  );
-
-  const productRepoRegister = container.register<ProductRepositoryClass>(
-    'ProductRepositoryClass',
-    {
-      useClass: ProductRepositoryClass,
-    },
-  );
-
-  //   const userBaseRepoInterface = container.register<UserBaseRepoInterface>(
-  //     'UserBaseRepoInterface',
-  //     {
-  //       useClass: UserRepositoryClass,
-  //     },
-  //   );
   return {
-    // services
-    authServRegister,
-    userServiceRegister,
-    productServRegister,
-    passHashingServRegister,
-    jwtServRegister,
-
-    // controllers
-
-    authControllerRegister,
-    prodControllerRegister,
-    userController,
-
-    //  repos
-
-    userRepoRegister,
-    productRepoRegister,
-    // userBaseRepoInterface
+    // userRepoInterface,
+    prodRepoInterface,
+    // userRepo,
+    //     authRepo,
+    passHashServ,
+    jwtServ,
+    userServ,
+    prodServ,
+    prodRepo,
   };
 };
 

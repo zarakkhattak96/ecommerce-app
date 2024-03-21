@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-
 import express from 'express';
 import config from '../infra/config';
 import bodyParser from 'body-parser';
@@ -15,8 +14,7 @@ export const app = express();
 const bootstrap = async () => {
   ds;
   const diContainer = await bootstrapDi();
-
-  const productRouter = bootstrapRoutes(diContainer.prodController);
+  // const productRouter = bootstrapRoutes(diContainer.prodController);
   const userRouter = bootstrapUserRoutes(diContainer.userController);
 
   contextIdGenerator(app);
@@ -25,11 +23,11 @@ const bootstrap = async () => {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
 
-  app.use('/api', productRouter, userRouter);
+  app.use('/api', userRouter);
   const PORT = config.PORT;
 
   app.listen(PORT, () => {
-    console.log(`App is live at ${PORT}`);
+    console.log(`App is live at http://localhost:${PORT}`);
   });
 };
 

@@ -6,7 +6,7 @@ export class ProductModel {
   @PrimaryGeneratedColumn('increment', {
     name: 'id',
     type: 'integer',
-    primaryKeyConstraintName: "products_pkey"
+    primaryKeyConstraintName: 'products_pkey',
   })
   id: number;
 

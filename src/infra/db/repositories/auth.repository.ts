@@ -1,6 +1,7 @@
 import { Repository } from 'typeorm';
 import { UserModel } from '../models/user/user.model';
 import { NotFoundError } from '@app/app.errors';
+import { autoInjectable, injectable, singleton } from 'tsyringe';
 
 export class AuthRepositoryClass {
   private userBaseRepo: Repository<UserModel>;

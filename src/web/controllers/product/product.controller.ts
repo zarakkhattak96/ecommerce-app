@@ -1,4 +1,4 @@
-import { autoInjectable, inject } from 'tsyringe';
+import { autoInjectable, inject, injectable } from 'tsyringe';
 import {
   AddProductDto,
   DeleteProductDto,
@@ -36,8 +36,6 @@ export class ProductController {
     const prodId = req.params.productId;
 
     const dto = UpdateProductDto.updateProd(req.id, parseInt(prodId), req.body);
-
-    // console.log(dto, 'DTO');
 
     const updatedProd = await this.prodServ.updateProduct(dto);
 

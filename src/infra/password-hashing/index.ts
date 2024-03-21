@@ -1,7 +1,9 @@
 import { PasswordHashingService } from '@app/services/password-hashing.service';
 import config from '@infra/config/index';
 import { hash, verify } from '@node-rs/bcrypt';
+import { autoInjectable, injectable } from 'tsyringe';
 
+@autoInjectable()
 export class PasswordHashingBcrypt extends PasswordHashingService {
   async hash(plainTextPass: string): Promise<string> {
     return hash(plainTextPass, config.authConfig.SALT_ROUNDS);

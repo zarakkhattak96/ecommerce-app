@@ -1,54 +1,43 @@
 import { container } from 'tsyringe';
 import bootstrapDiRegister from './register/di.register';
-import { AuthService } from '@app/services/auth/auth.service';
+import { ProductController } from '@web/controllers/product/product.controller';
+import { UserController } from '@web/controllers/users/user.controller';
 import { UserServiceClass } from '@app/services/user/user.service';
 import { ProductService } from '@app/services/product/product.service';
-import { PasswordHashingBcrypt } from '@infra/password-hashing';
-import { JwtServiceProv } from '@infra/jwt';
-import { UserController } from '@web/controllers/users/user.controller';
-import { ProductController } from '@web/controllers/product/product.controller';
-import { UserRepositoryClass } from '../repositories/user.repository';
 import { ProductRepositoryClass } from '../repositories/product.repositories';
+import { UserRepositoryClass } from '../repositories/user.repository';
+import { Repository } from 'typeorm';
+import { UserModel } from '../models/user/user.model';
+import { UserBaseRepoInterface } from '@domain/interfaces/user/user.interface';
 
 const bootstrapDi = async () => {
   await bootstrapDiRegister();
 
   //   resolving services
-  const authServ = container.resolve(AuthService);
-  const userServ = container.resolve(UserServiceClass);
-  const prodServ = container.resolve(ProductService);
-  const passServ = container.resolve(PasswordHashingBcrypt);
-  const jwtServ = container.resolve(JwtServiceProv);
-
-  //   resolving controllers
-
-  //   const authController = container.resolve(UserController);
+  //
+  // const userRepo = container.resolve<UserBaseRepoInterface>(
+  //   'UserBaseRepoInterface',
+  // );
+  // const prodRepo = container.resolve(ProductRepositoryClass);
+  // const userServ = container.resolve(UserServiceClass);
+  // const prodServ = container.resolve(ProductService);
+  // const prodController = container.resolve(ProductController);
   const userController = container.resolve(UserController);
-  const prodController = container.resolve(ProductController);
+  // const userBaseRepo = container.resolve(Repository<UserModel>);
 
-  //   resolving repos
+  // const prodRepo = container.resolve(ProductRepositoryClass);
+  // const userRepo = container.resolve(UserRepositoryClass);
 
-  const userRepo = container.resolve(UserRepositoryClass);
-  const prodRepo = container.resolve(ProductRepositoryClass);
-  //   const userBaseRepoInterface = container.resolve(UserRepositoryClass)
+  // jwt and passhashing to be resolved
 
   return {
-    // services
-    authServ,
-    userServ,
-    prodServ,
-    passServ,
-    jwtServ,
-
-    // controllers
-    // authController,
+    // prodController,
     userController,
-    prodController,
-
-    // repos
-    userRepo,
-    prodRepo,
-    // userBaseRepoInterface
+    // userServ,
+    // prodServ,
+    // prodRepo,
+    // userRepo,
+    // userBaseRepo,
   };
 };
 

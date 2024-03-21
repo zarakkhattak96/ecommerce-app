@@ -1,11 +1,11 @@
 import { NotAuthorized, NotFoundError, AppError } from '@app/app.errors';
 import { PasswordHashingService } from '../password-hashing.service';
-// import { UserServiceClass } from '../user/user.service';
 import { JwtService } from '../jwt.service';
 import { LoginDto } from '@app/dto/auth/auth.dto';
 import { AuthRepositoryClass } from '@infra/db/repositories/auth.repository';
-import config from '@infra/config';
-import { autoInjectable, inject } from 'tsyringe';
+import { autoInjectable, injectable } from 'tsyringe';
+import { PasswordHashingBcrypt } from '@infra/password-hashing';
+import { JwtServiceProv } from '@infra/jwt';
 
 export type AuthResponseType = {
   redirectUrl?: string;
@@ -26,9 +26,9 @@ export const authError = (description: string, code: 'not_authorized') => {
 @autoInjectable()
 export class AuthService {
   constructor(
-    @inject("PasswordHashingService") private readonly passServ: PasswordHashingService,
+    private readonly passServ: PasswordHashingBcrypt,
     private readonly authRepo: AuthRepositoryClass,
-    private readonly jwtServ?: JwtService,
+    private readonly jwtServ: JwtServiceProv,
   ) {}
 
   async login(authDto: LoginDto) {

@@ -1,17 +1,18 @@
 import { NotFoundError } from '@app/app.errors';
-import { ProductBaseRepo } from '../../../domain/interfaces/product/product.interface';
+import { ProductBaseRepoInterface } from '../../../domain/interfaces/product/product.interface';
 import {
   AddProductDto,
   DeleteProductDto,
   GetProdById,
   UpdateProductDto,
 } from '../../dto/product/product.dto';
-import { ProductRepositoryClass } from '@infra/db/repositories/product.repositories';
-import { autoInjectable } from 'tsyringe';
+import { autoInjectable, inject, injectable } from 'tsyringe';
 
 @autoInjectable()
 export class ProductService {
-  constructor(private readonly productRepo: ProductBaseRepo) {}
+  constructor(
+    @inject("ProductBaseRepoInterface") private readonly productRepo: ProductBaseRepoInterface,
+  ) {}
 
   async addProduct(prodDto: AddProductDto) {
     await this.productRepo.insert(prodDto.addProdDto);
