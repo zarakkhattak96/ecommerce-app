@@ -28,3 +28,13 @@ export class CreateUserDto {
   }
 
 }
+
+export class FetchAllUsersDto{
+
+  private constructor(readonly contextId: string){}
+
+  static fetchAll(contextId: string, ): FetchAllUsersDto{
+
+    return new FetchAllUsersDto(contextId)
+  }
+}

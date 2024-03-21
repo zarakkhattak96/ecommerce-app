@@ -17,7 +17,6 @@ export class UserRepositoryClass implements UserBaseRepoInterface {
   }
 
   async createUser(userInterface: UserInterface) {
-    console.log(this.userRepo, 'USER REPo');
     const createUser = this.userRepo.create(userInterface);
 
     return await this.userRepo.save(createUser, { reload: true });

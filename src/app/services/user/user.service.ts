@@ -1,9 +1,8 @@
-import { CreateUserDto } from '@app/dto/user/user.dto';
+import { CreateUserDto, FetchAllUsersDto } from '@app/dto/user/user.dto';
 import { UserBaseRepoInterface } from '@domain/interfaces/user/user.interface';
-import { PasswordHashingService } from '../password-hashing.service';
-import { AlreadyExists, InvalidData } from '@app/app.errors';
+import { AlreadyExists, InvalidData, NotFoundError } from '@app/app.errors';
 import { v4 as uuidv4 } from '@napi-rs/uuid';
-import { autoInjectable, inject, injectable } from 'tsyringe';
+import {  inject, injectable } from 'tsyringe';
 import { PasswordHashingBcrypt } from '@infra/password-hashing';
 
 @injectable()
@@ -58,5 +57,14 @@ export class UserServiceClass {
     return {
       user: createUser,
     };
+  }
+
+  async fetchAllUsers(usersDto: FetchAllUsersDto){
+
+    const allUsers =  await this.userBaseRepo.fetchAllUsers();
+
+    if(!allUsers) throw new NotFoundError("No users data exists in the database");
+
+    return allUsers;
   }
 }

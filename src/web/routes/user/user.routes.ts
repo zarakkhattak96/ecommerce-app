@@ -10,6 +10,8 @@ export const bootstrapUserRoutes = (userController: UserController) => {
 
   router.post("/users/login", userController.login )
 
+  router.get("/users/", userController.fetchAllUsers)
+
   return router
 
 
