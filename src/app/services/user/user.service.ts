@@ -1,6 +1,6 @@
-import { CreateUserDto, FetchAllUsersDto, FetchUserDto } from '@app/dto/user/user.dto';
+import { CreateUserDto, FetchAllUsersDto, FetchUserDto, UpdateUserDto } from '@app/dto/user/user.dto';
 import { UserBaseRepoInterface } from '@domain/interfaces/user/user.interface';
-import { AlreadyExists, InvalidData, NotFoundError } from '@app/app.errors';
+import { AlreadyExists, InvalidData, NotAuthorized, NotFoundError } from '@app/app.errors';
 import { v4 as uuidv4 } from '@napi-rs/uuid';
 import {  inject, injectable } from 'tsyringe';
 import { PasswordHashingBcrypt } from '@infra/password-hashing';
@@ -77,6 +77,56 @@ export class UserServiceClass {
 
     return fetchUser;
 
+
+  }
+
+  async updateUser(updateDto: UpdateUserDto){
+   const {userId, updateData} = updateDto;
+
+    const userPassword = updateData.password;
+    const confirmUserPassword = updateData.confirmPassword;
+
+    // const userEmail = updateData.email;
+
+    let hashedUserPassword = "";
+    let hashedConfirmPassword = "";
+    // let emailExists;     //TODO: To add logic to keep a check on email too, same email user can update data
+
+    if(userPassword !== confirmUserPassword){throw new InvalidData("Passwords should be similar")};
+      
+    //   if(userEmail){
+
+    //   emailExists = await this.userBaseRepo.fetchByEmail(userEmail);
+    // }
+
+    if(userPassword === confirmUserPassword ){
+
+      if(userPassword && confirmUserPassword ){
+        
+      hashedUserPassword = await this.passHashServ.hash(userPassword);
+      
+      hashedConfirmPassword = await this.passHashServ.hash(confirmUserPassword);
+ 
+
+       return await this.userBaseRepo.updateUser(userId,{
+          firstName: updateData.firstName,
+          lastName: updateData.lastName,
+          email: updateData.email,
+          productId: updateData.productId,
+          phoneNumber: updateData.phoneNumber,
+          city: updateData.city,
+          address: updateData.city,
+          password: hashedUserPassword,
+          confirmPassword: hashedConfirmPassword
+       }) 
+      }
+
+    }
+
+    throw new NotAuthorized("You can only edit your data");
+    
+   
+   
 
   }
 }

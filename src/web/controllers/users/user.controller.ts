@@ -1,4 +1,4 @@
-import { CreateUserDto, FetchAllUsersDto, FetchUserDto } from '@app/dto/user/user.dto';
+import { CreateUserDto, FetchAllUsersDto, FetchUserDto, UpdateUserDto } from '@app/dto/user/user.dto';
 import { AuthService, AuthResponseType } from '@app/services/auth/auth.service';
 import { UserServiceClass } from '@app/services/user/user.service';
 import { Request, Response } from 'express';
@@ -75,4 +75,18 @@ export class UserController {
 
     return res.status(200).send(userFound);
   }
+
+  updateUser = async (req: Request, res: Response)=> {
+
+    const userId = req.params.userId;
+
+    const dto = UpdateUserDto.updateUser(req.id, parseInt(userId), req.body);
+
+    const updatedUser = await this.userServ.updateUser(dto);
+
+    return res.status(200).send(updatedUser);
+  }
+
+
+  //TODO: to add the delete user route here
 }

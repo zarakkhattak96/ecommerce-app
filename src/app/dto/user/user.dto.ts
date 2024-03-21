@@ -50,3 +50,30 @@ export class FetchUserDto{
     return new FetchUserDto(contextId, validId)
   }
 }
+
+export class UpdateUserDto{
+
+  private static readonly schema = z.object({
+    firstName : z.string().nullable(),
+    lastName : z.string().nullable(),
+    email: z.string().nullable(),
+    productId: z.number().nullable(),
+    uuid: z.string(),
+    address: z.string().nullable(),
+    city: z.string().nullable(),
+    password: z.string(),
+    confirmPassword: z.string(),
+    phoneNumber: z.string().nullable()
+  }).partial({uuid: true, productId: true}) 
+
+
+  private constructor(readonly contextId: string, readonly userId: number, readonly updateData: Readonly <z.infer<typeof UpdateUserDto.schema>> ){}
+
+  static updateUser(contextId: string, userId: number, data: unknown): UpdateUserDto{
+
+    const validId = validateId(userId);
+    const validData = validateData(UpdateUserDto.schema, data);
+
+    return new UpdateUserDto(contextId, validId, validData);
+  }
+}

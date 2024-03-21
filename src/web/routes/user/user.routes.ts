@@ -13,6 +13,8 @@ export const bootstrapUserRoutes = (userController: UserController) => {
   router.get("/users/", userController.fetchAllUsers)
 
   router.get("/users/:userId", userController.fetchUserById)
+
+  router.put("/users/:userId", userController.updateUser)
   return router
 
 

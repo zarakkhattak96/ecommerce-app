@@ -44,10 +44,25 @@ export class UserRepositoryClass implements UserBaseRepoInterface {
 
   async fetchById(id: number) {
   
-    const fetchUser = await this.userRepo.findOne({where: {id: id}});
+    const fetchUser = await this.userRepo.findOne({where: {id: id}, relations: ["product"]});
 
     if(!fetchUser) throw new NotFoundError(`No user found with id: ${id}`);
 
     return fetchUser;
+  }
+
+  async updateUser(userId: number, userInterface: UserInterface){
+  
+
+  await this.userRepo.update({id: userId }, userInterface);
+    
+    const findUpdatedUser = await this.userRepo.findOne({where: {id: userId}, relations: ["product"]});
+
+    if(!findUpdatedUser) throw new NotFoundError(`No user updated with id: ${userId}`);
+
+    return findUpdatedUser
+
+
+
   }
 }
