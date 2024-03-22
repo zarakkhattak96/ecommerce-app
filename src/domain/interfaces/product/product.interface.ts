@@ -10,10 +10,10 @@ export interface ProductInterface {
   isAvailable: boolean | null;
 }
 
-export  interface ProductBaseRepoInterface {
+export interface ProductBaseRepoInterface {
   insert(product: ProductInterface): Promise<ProductInterface>;
   fetch(id: number | undefined): Promise<ProductInterface> | null;
   fetchAll(): Promise<ProductInterface[]>;
-  update(prod: ProductInterface): Promise<ProductInterface>;
- delete(id: number): Promise<ProductInterface>;
+  update(userId: number, prod: ProductInterface): Promise<ProductInterface>;
+  delete(id: number): Promise<ProductInterface>;
 }

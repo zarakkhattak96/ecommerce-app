@@ -1,20 +1,21 @@
-import { Repository } from 'typeorm';
-import { AppError, NotFoundError } from '../../../app/app.errors';
+import { EntityManager, Repository } from "typeorm";
+import { AppError, NotFoundError } from "../../../app/app.errors";
 import {
   ProductInterface,
   ProductBaseRepoInterface,
-} from '../../../domain/interfaces/product/product.interface';
+} from "../../../domain/interfaces/product/product.interface";
 
-import { ProductModel } from '../models/product/product.model';
-import { autoInjectable, delay, inject, injectable, singleton } from 'tsyringe';
+import { ProductModel } from "../models/product/product.model";
+import { autoInjectable, delay, inject, injectable, singleton } from "tsyringe";
+import ds from "@infra/config/connection.config";
 
-@autoInjectable()
-// @singleton()
 export class ProductRepositoryClass implements ProductBaseRepoInterface {
-  constructor(private readonly prodBaseRepo: Repository<ProductModel>) {}
+  private prodBaseRepo: Repository<ProductModel>;
+  constructor() {
+    this.prodBaseRepo = new Repository(ProductModel, new EntityManager(ds));
+  }
 
   async insert(product: ProductInterface) {
-    console.log(this.prodBaseRepo, 'REPO');
     const createProd = this.prodBaseRepo.create(product);
 
     return await this.prodBaseRepo.save(createProd);
@@ -23,7 +24,7 @@ export class ProductRepositoryClass implements ProductBaseRepoInterface {
   async fetch(id: number) {
     const fetchProd = await this.prodBaseRepo.findOne({
       where: { id: id },
-      relations: ['users'],
+      relations: ["users"],
     });
 
     if (!fetchProd) throw new NotFoundError(`No product found with id: ${id}`);
@@ -32,28 +33,23 @@ export class ProductRepositoryClass implements ProductBaseRepoInterface {
   }
 
   async fetchAll() {
-    const fetchProds = await this.prodBaseRepo.find({ relations: ['users'] });
+    const fetchProds = await this.prodBaseRepo.find({ relations: ["users"] });
 
     if (!fetchProds)
-      throw new NotFoundError('No products available at the moment');
+      throw new NotFoundError("No products available at the moment");
 
     return fetchProds;
   }
 
-  //TODO: To fix the update query
-  async update(prod: ProductInterface) {
-    console.log(prod.id, 'repos id');
-
-    await this.prodBaseRepo.update({ id: prod.id }, prod);
+  async update(prodId: number, prod: ProductInterface) {
+    await this.prodBaseRepo.update({ id: prodId }, prod);
 
     const updatedProduct = await this.prodBaseRepo.findOne({
-      where: { id: prod.id },
-      relations: ['users'],
+      where: { id: prodId },
+      relations: ["users"],
     });
-    // console.log(updated, 'UPDATE BODY');
 
-    // console.log(updatedProduct, 'UPDATED');
-    if (!updatedProduct) throw new NotFoundError('No product was updated');
+    if (!updatedProduct) throw new NotFoundError("No product was updated");
 
     return updatedProduct;
   }
@@ -61,7 +57,7 @@ export class ProductRepositoryClass implements ProductBaseRepoInterface {
   async delete(id: number) {
     const fetchProdById = await this.prodBaseRepo.findOne({
       where: { id: id },
-      relations: ['users'],
+      relations: ["users"],
     });
 
     if (!fetchProdById)

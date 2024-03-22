@@ -1,17 +1,18 @@
-import { NotFoundError } from '@app/app.errors';
-import { ProductBaseRepoInterface } from '../../../domain/interfaces/product/product.interface';
+import { NotFoundError } from "@app/app.errors";
+import { ProductBaseRepoInterface } from "../../../domain/interfaces/product/product.interface";
 import {
   AddProductDto,
   DeleteProductDto,
   GetProdById,
   UpdateProductDto,
-} from '../../dto/product/product.dto';
-import { autoInjectable, inject, injectable } from 'tsyringe';
+} from "../../dto/product/product.dto";
+import { inject, injectable } from "tsyringe";
 
-@autoInjectable()
+@injectable()
 export class ProductService {
   constructor(
-    @inject("ProductBaseRepoInterface") private readonly productRepo: ProductBaseRepoInterface,
+    @inject("ProductBaseRepoInterface")
+    private readonly productRepo: ProductBaseRepoInterface,
   ) {}
 
   async addProduct(prodDto: AddProductDto) {
@@ -52,24 +53,9 @@ export class ProductService {
     };
   }
 
-  // TODO: to fix the update query
-
   async updateProduct(prodDto: UpdateProductDto) {
-    const { ...prodData } = prodDto;
+    const { productId, prodData } = prodDto;
 
-    const updated = await this.productRepo.update(prodData.prodData);
-
-    console.log(updated, 'updated');
-
-    if (!updated) return;
-
-    const fetchProd = await this.productRepo.fetch(updated.id);
-
-    console.log(fetchProd, 'FETCH');
-    // if (!updated) throw new NotFoundError('asjkdh');
-
-    return {
-      product: fetchProd,
-    };
+    return await this.productRepo.update(productId, prodData);
   }
 }

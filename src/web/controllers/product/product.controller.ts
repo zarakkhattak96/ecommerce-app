@@ -1,14 +1,14 @@
-import { autoInjectable, inject, injectable } from 'tsyringe';
+import { inject, injectable } from "tsyringe";
 import {
   AddProductDto,
   DeleteProductDto,
   GetProdById,
   UpdateProductDto,
-} from '../../../app/dto/product/product.dto';
-import { ProductService } from '../../../app/services/product/product.service';
-import { Request, Response } from 'express';
+} from "../../../app/dto/product/product.dto";
+import { ProductService } from "../../../app/services/product/product.service";
+import { Request, Response } from "express";
 
-@autoInjectable()
+@injectable()
 export class ProductController {
   constructor(
     @inject("ProductService") private readonly prodServ: ProductService,
@@ -19,7 +19,12 @@ export class ProductController {
 
     const addProd = await this.prodServ.addProduct(prodDto);
 
-    return res.status(201).json(addProd);
+    return res.status(201).json({
+      status: 201,
+      code: "created",
+      message: "A new product has been created",
+      product: addProd,
+    });
   };
 
   removeProd = async (req: Request, res: Response) => {
@@ -29,7 +34,12 @@ export class ProductController {
 
     const removeProd = await this.prodServ.removeProduct(dto);
 
-    return res.json(removeProd);
+    return res.json({
+      status: 204,
+      code: "no_content",
+      message: `Product with id: ${id} has been deleted`,
+      deletedProduct: removeProd,
+    });
   };
 
   updateProds = async (req: Request, res: Response) => {
@@ -39,13 +49,23 @@ export class ProductController {
 
     const updatedProd = await this.prodServ.updateProduct(dto);
 
-    return res.json(updatedProd);
+    return res.status(200).json({
+      status: 200,
+      code: "OK",
+      message: `Product with id: ${prodId} has been updated`,
+      updatedProduct: updatedProd,
+    });
   };
 
   getProds = async (req: Request, res: Response) => {
     const prods = await this.prodServ.fetchProducts();
 
-    return res.status(200).json(prods);
+    return res.status(200).json({
+      status: 200,
+      code: "OK",
+      message: "All products have been listed",
+      prods, //TODO: to fix the response for fetchAll
+    });
   };
 
   getProdById = async (req: Request, res: Response) => {
@@ -55,6 +75,11 @@ export class ProductController {
 
     const fetchProd = await this.prodServ.fetchById(dto);
 
-    return res.status(200).json(fetchProd);
+    return res.status(200).json({
+      status: 200,
+      code: "OK",
+      message: "Product has been fetched",
+      product: fetchProd,
+    });
   };
 }
