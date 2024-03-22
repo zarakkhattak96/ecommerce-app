@@ -1,15 +1,28 @@
-import { CreateUserDto, FetchAllUsersDto, FetchUserDto, UpdateUserDto } from '@app/dto/user/user.dto';
-import { UserBaseRepoInterface } from '@domain/interfaces/user/user.interface';
-import { AlreadyExists, InvalidData, NotAuthorized, NotFoundError } from '@app/app.errors';
-import { v4 as uuidv4 } from '@napi-rs/uuid';
-import {  inject, injectable } from 'tsyringe';
-import { PasswordHashingBcrypt } from '@infra/password-hashing';
+import {
+  CreateUserDto,
+  DeleteUserDto,
+  FetchAllUsersDto,
+  FetchUserDto,
+  UpdateUserDto,
+} from "@app/dto/user/user.dto";
+import { UserBaseRepoInterface } from "@domain/interfaces/user/user.interface";
+import {
+  AlreadyExists,
+  InvalidData,
+  NotAuthorized,
+  NotFoundError,
+} from "@app/app.errors";
+import { v4 as uuidv4 } from "@napi-rs/uuid";
+import { inject, injectable } from "tsyringe";
+import { PasswordHashingBcrypt } from "@infra/password-hashing";
 
 @injectable()
 export class UserServiceClass {
   constructor(
-    @inject("UserBaseRepoInterface") private readonly userBaseRepo: UserBaseRepoInterface,
-    @inject("PasswordHashingBcrypt") private readonly passHashServ: PasswordHashingBcrypt,
+    @inject("UserBaseRepoInterface")
+    private readonly userBaseRepo: UserBaseRepoInterface,
+    @inject("PasswordHashingBcrypt")
+    private readonly passHashServ: PasswordHashingBcrypt,
   ) {}
 
   async createUser(userDto: CreateUserDto) {
@@ -18,11 +31,11 @@ export class UserServiceClass {
     const userPassword = createData.password;
     const confirmPassword = createData.confirmPassword;
 
-    let hashedUserPassword = '';
-    let hashedConfirmPassword = '';
+    let hashedUserPassword = "";
+    let hashedConfirmPassword = "";
 
     if (userPassword !== confirmPassword) {
-      throw new InvalidData('Passwords should be similar');
+      throw new InvalidData("Passwords should be similar");
     }
     if (userPassword === confirmPassword) {
       if (userPassword && confirmPassword) {
@@ -39,7 +52,7 @@ export class UserServiceClass {
     }
 
     if (emailExists)
-      throw new AlreadyExists('A user with this email already exists');
+      throw new AlreadyExists("A user with this email already exists");
 
     const createUser = await this.userBaseRepo.createUser({
       firstName: createData.firstName,
@@ -59,56 +72,52 @@ export class UserServiceClass {
     };
   }
 
-  async fetchAllUsers(usersDto: FetchAllUsersDto){
+  async fetchAllUsers(usersDto: FetchAllUsersDto) {
+    const allUsers = await this.userBaseRepo.fetchAllUsers();
 
-    const allUsers =  await this.userBaseRepo.fetchAllUsers();
-
-    if(!allUsers) throw new NotFoundError("No users data exists in the database");
+    if (!allUsers)
+      throw new NotFoundError("No users data exists in the database");
 
     return allUsers;
   }
 
-  async fetchUser(userDto: FetchUserDto){
-    const {userId} = userDto
+  async fetchUser(userDto: FetchUserDto) {
+    const { userId } = userDto;
 
     const fetchUser = await this.userBaseRepo.fetchById(userId);
 
-    if(!fetchUser) throw new NotFoundError(`No user found with id: ${userId}`)
+    if (!fetchUser) throw new NotFoundError(`No user found with id: ${userId}`);
 
     return fetchUser;
-
-
   }
 
-  async updateUser(updateDto: UpdateUserDto){
-   const {userId, updateData} = updateDto;
+  async updateUser(updateDto: UpdateUserDto) {
+    const { userId, updateData } = updateDto;
 
     const userPassword = updateData.password;
     const confirmUserPassword = updateData.confirmPassword;
-
-    // const userEmail = updateData.email;
 
     let hashedUserPassword = "";
     let hashedConfirmPassword = "";
     // let emailExists;     //TODO: To add logic to keep a check on email too, same email user can update data
 
-    if(userPassword !== confirmUserPassword){throw new InvalidData("Passwords should be similar")};
-      
+    if (userPassword !== confirmUserPassword) {
+      throw new InvalidData("Passwords should be similar");
+    }
+
     //   if(userEmail){
 
     //   emailExists = await this.userBaseRepo.fetchByEmail(userEmail);
     // }
 
-    if(userPassword === confirmUserPassword ){
+    if (userPassword === confirmUserPassword) {
+      if (userPassword && confirmUserPassword) {
+        hashedUserPassword = await this.passHashServ.hash(userPassword);
 
-      if(userPassword && confirmUserPassword ){
-        
-      hashedUserPassword = await this.passHashServ.hash(userPassword);
-      
-      hashedConfirmPassword = await this.passHashServ.hash(confirmUserPassword);
- 
+        hashedConfirmPassword =
+          await this.passHashServ.hash(confirmUserPassword);
 
-       return await this.userBaseRepo.updateUser(userId,{
+        return await this.userBaseRepo.updateUser(userId, {
           firstName: updateData.firstName,
           lastName: updateData.lastName,
           email: updateData.email,
@@ -117,16 +126,17 @@ export class UserServiceClass {
           city: updateData.city,
           address: updateData.city,
           password: hashedUserPassword,
-          confirmPassword: hashedConfirmPassword
-       }) 
+          confirmPassword: hashedConfirmPassword,
+        });
       }
-
     }
 
     throw new NotAuthorized("You can only edit your data");
-    
-   
-   
+  }
 
+  async deleteUser(deleteDto: DeleteUserDto) {
+    const { userId } = deleteDto;
+
+    return await this.userBaseRepo.deleteUser(userId);
   }
 }
