@@ -27,10 +27,6 @@ export class UserRepositoryClass implements UserBaseRepoInterface {
       relations: ["purchases"],
     });
 
-    // const filteredUsers = fetchAllUsers.forEach(user=> {
-    //   const filteredProducts = user.product
-    // })
-
     if (!fetchAllUsers)
       throw new NotFoundError("No users found in the database");
 
@@ -74,7 +70,10 @@ export class UserRepositoryClass implements UserBaseRepoInterface {
   }
 
   async deleteUser(userId: number) {
-    const userFound = await this.userRepo.findOne({ where: { id: userId } });
+    const userFound = await this.userRepo.findOne({
+      where: { id: userId },
+      relations: ["purchases"],
+    });
 
     if (!userFound) throw new NotFoundError(`No user found with id: ${userId}`);
 

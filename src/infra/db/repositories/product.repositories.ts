@@ -1,12 +1,11 @@
 import { EntityManager, Repository } from "typeorm";
-import { AppError, NotFoundError } from "../../../app/app.errors";
+import { NotFoundError } from "../../../app/app.errors";
 import {
   ProductInterface,
   ProductBaseRepoInterface,
 } from "../../../domain/interfaces/product/product.interface";
 
 import { ProductModel } from "../models/product/product.model";
-import { autoInjectable, delay, inject, injectable, singleton } from "tsyringe";
 import ds from "@infra/config/connection.config";
 
 export class ProductRepositoryClass implements ProductBaseRepoInterface {

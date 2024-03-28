@@ -16,24 +16,20 @@ export class ProductService {
   ) {}
 
   async addProduct(prodDto: AddProductDto) {
-    await this.productRepo.insert(prodDto.addProdDto);
-
-    const fetchProds = await this.productRepo.fetchAll();
+    const addProd = await this.productRepo.insert(prodDto.addProdDto);
 
     return {
-      products: fetchProds,
+      products: addProd,
     };
   }
 
   async removeProduct(prodDto: DeleteProductDto) {
     const { productId } = prodDto;
 
-    await this.productRepo.delete(productId);
-
-    const fetchProds = await this.productRepo.fetchAll();
+    const prodRemoved = await this.productRepo.delete(productId);
 
     return {
-      products: fetchProds,
+      products: prodRemoved,
     };
   }
 

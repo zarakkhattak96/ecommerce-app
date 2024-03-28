@@ -1,12 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from "typeorm";
-import { ProductModel } from "../product/product.model";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { v4 as uuidv4 } from "@napi-rs/uuid";
 import { UserPurchases } from "./user-purchases.model";
 @Entity("users", { schema: "ecommerce" })
@@ -48,13 +40,9 @@ export class UserModel {
   @Column("character varying", { name: "confirm_password", nullable: true })
   confirmPassword: string | null;
 
-  // @ManyToOne(() => ProductModel, (prodMod) => prodMod.users)
-  // @JoinColumn({ name: "product_id", referencedColumnName: "id" })
-  // product: ProductModel;
-
   @OneToMany(() => UserPurchases, (purchases) => purchases.user, {
     nullable: false,
     cascade: true,
   })
-  purchases: UserPurchases[];
+  purchases: UserPurchases;
 }

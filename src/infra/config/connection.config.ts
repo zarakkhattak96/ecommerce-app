@@ -1,4 +1,3 @@
-import "reflect-metadata";
 import { DataSource } from "typeorm";
 import dbConfig from "./db.config";
 import { UserModel } from "../db/models/user/user.model";
