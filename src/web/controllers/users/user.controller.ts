@@ -70,7 +70,7 @@ export class UserController {
     return res.json({
       status: 200,
       code: "OK",
-      allUsers,
+      users: allUsers,
       message: "Users data in the database",
     });
   };

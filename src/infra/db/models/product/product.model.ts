@@ -1,46 +1,49 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { UserModel } from '../user/user.model';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { UserModel } from "../user/user.model";
+import { UserPurchases } from "../user/user-purchases.model";
 
-@Entity('products', { schema: 'ecommerce' })
+@Entity("products", { schema: "ecommerce" })
 export class ProductModel {
-  @PrimaryGeneratedColumn('increment', {
-    name: 'id',
-    type: 'integer',
-    primaryKeyConstraintName: 'products_pkey',
+  @PrimaryGeneratedColumn("increment", {
+    name: "id",
+    type: "integer",
+    primaryKeyConstraintName: "products_pkey",
   })
   id: number;
 
-  @Column('character varying', { name: 'make', nullable: true })
+  @Column("character varying", { name: "make", nullable: true })
   make: string | null;
 
-  @Column('integer', { name: 'model', nullable: true })
+  @Column("integer", { name: "model", nullable: true })
   model: number | null;
 
-  @Column('integer', { name: 'price', nullable: true })
+  @Column("integer", { name: "price", nullable: true })
   price: number | null;
 
-  @Column('character varying', { name: 'description', nullable: true })
+  @Column("character varying", { name: "description", nullable: true })
   description: string | null;
 
-  @Column('character varying', { name: 'sex', nullable: true })
+  @Column("character varying", { name: "sex", nullable: true })
   sex: string | null;
 
-  @Column('character varying', { name: 'color', nullable: true })
+  @Column("character varying", { name: "color", nullable: true })
   color: string | null;
 
-  @Column('integer', { name: 'size', nullable: true })
+  @Column("integer", { name: "size", nullable: true })
   size: number | null;
 
-  @Column('boolean', { name: 'is_available', nullable: true })
+  @Column("boolean", { name: "is_available", nullable: true })
   isAvailable: boolean | null;
 
-  @OneToMany(
-    () => UserModel,
-    (user) => user.product,
-    {
-      nullable: false,
-      cascade: true,
-    },
-  )
-  users: UserModel[];
+  // @OneToMany(() => UserModel, (user) => user.product, {
+  //   nullable: false,
+  //   cascade: true,
+  // })
+  // users: UserModel[];
+
+  @OneToMany(() => UserPurchases, (purchases) => purchases.product, {
+    nullable: false,
+    cascade: true,
+  })
+  purchases: UserPurchases[];
 }

@@ -24,7 +24,7 @@ export class ProductRepositoryClass implements ProductBaseRepoInterface {
   async fetch(id: number) {
     const fetchProd = await this.prodBaseRepo.findOne({
       where: { id: id },
-      relations: ["users"],
+      relations: ["purchases"],
     });
 
     if (!fetchProd) throw new NotFoundError(`No product found with id: ${id}`);
@@ -33,7 +33,9 @@ export class ProductRepositoryClass implements ProductBaseRepoInterface {
   }
 
   async fetchAll() {
-    const fetchProds = await this.prodBaseRepo.find({ relations: ["users"] });
+    const fetchProds = await this.prodBaseRepo.find({
+      relations: ["purchases"],
+    });
 
     if (!fetchProds)
       throw new NotFoundError("No products available at the moment");
@@ -46,7 +48,7 @@ export class ProductRepositoryClass implements ProductBaseRepoInterface {
 
     const updatedProduct = await this.prodBaseRepo.findOne({
       where: { id: prodId },
-      relations: ["users"],
+      relations: ["purchases"],
     });
 
     if (!updatedProduct) throw new NotFoundError("No product was updated");
@@ -57,7 +59,7 @@ export class ProductRepositoryClass implements ProductBaseRepoInterface {
   async delete(id: number) {
     const fetchProdById = await this.prodBaseRepo.findOne({
       where: { id: id },
-      relations: ["users"],
+      relations: ["purchases"],
     });
 
     if (!fetchProdById)

@@ -23,7 +23,13 @@ export class UserRepositoryClass implements UserBaseRepoInterface {
   }
 
   async fetchAllUsers() {
-    const fetchAllUsers = await this.userRepo.find({ relations: ["product"] });
+    const fetchAllUsers = await this.userRepo.find({
+      relations: ["purchases"],
+    });
+
+    // const filteredUsers = fetchAllUsers.forEach(user=> {
+    //   const filteredProducts = user.product
+    // })
 
     if (!fetchAllUsers)
       throw new NotFoundError("No users found in the database");
@@ -34,7 +40,7 @@ export class UserRepositoryClass implements UserBaseRepoInterface {
   async fetchByEmail(email: string) {
     const fetchUserByEmail = await this.userRepo.findOne({
       where: { email: email },
-      relations: ["product"],
+      relations: ["purchases"],
     });
 
     if (fetchUserByEmail) {
@@ -45,7 +51,7 @@ export class UserRepositoryClass implements UserBaseRepoInterface {
   async fetchById(id: number) {
     const fetchUser = await this.userRepo.findOne({
       where: { id: id },
-      relations: ["product"],
+      relations: ["purchases"],
     });
 
     if (!fetchUser) throw new NotFoundError(`No user found with id: ${id}`);
@@ -58,7 +64,7 @@ export class UserRepositoryClass implements UserBaseRepoInterface {
 
     const findUpdatedUser = await this.userRepo.findOne({
       where: { id: userId },
-      relations: ["product"],
+      relations: ["purchases"],
     });
 
     if (!findUpdatedUser)
