@@ -47,8 +47,6 @@ export class AuthService {
       sub: authUser.uuid,
     });
 
-    console.log(authToken, "AUTH TOKEN");
-
     if (authUser && verifyPassword) {
       return {
         message: "Successfully logged in",
