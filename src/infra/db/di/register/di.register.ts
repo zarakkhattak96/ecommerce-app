@@ -1,31 +1,28 @@
-import { JwtService } from '@app/services/jwt.service';
-import { PasswordHashingService } from '@app/services/password-hashing.service';
-import { ProductService } from '@app/services/product/product.service';
-import { UserServiceClass } from '@app/services/user/user.service';
-import { ProductBaseRepoInterface } from '@domain/interfaces/product/product.interface';
-import { UserBaseRepoInterface } from '@domain/interfaces/user/user.interface';
-import ds from '@infra/config/connection.config';
-import { UserModel } from '@infra/db/models/user/user.model';
-import { AuthRepositoryClass } from '@infra/db/repositories/auth.repository';
-import { ProductRepositoryClass } from '@infra/db/repositories/product.repositories';
-import { UserRepositoryClass } from '@infra/db/repositories/user.repository';
-import { JwtServiceProv } from '@infra/jwt';
-import { PasswordHashingBcrypt } from '@infra/password-hashing';
-import { container } from 'tsyringe';
+import { AuthService } from "@app/services/auth/auth.service";
+import { JwtService } from "@app/services/jwt.service";
+import { PasswordHashingService } from "@app/services/password-hashing.service";
+import { ProductService } from "@app/services/product/product.service";
+import { UserServiceClass } from "@app/services/user/user.service";
+import { ProductBaseRepoInterface } from "@domain/interfaces/product/product.interface";
+import { AuthRepositoryClass } from "@infra/db/repositories/auth.repository";
+import { ProductRepositoryClass } from "@infra/db/repositories/product.repositories";
+import { UserRepositoryClass } from "@infra/db/repositories/user.repository";
+import { JwtServiceProv } from "@infra/jwt";
+import { PasswordHashingBcrypt } from "@infra/password-hashing";
+import { container } from "tsyringe";
 
 const bootstrapDiRegister = async () => {
-  const userRepoInterface = container.register('UserBaseRepoInterface', {
+  const userRepoInterface = container.register("UserBaseRepoInterface", {
     useClass: UserRepositoryClass,
   });
 
   const prodRepoInterface = container.register<ProductBaseRepoInterface>(
-    'ProductBaseRepoInterface',
+    "ProductBaseRepoInterface",
     { useClass: ProductRepositoryClass },
   );
-  //   const authRepo = container.register<AuthRepositoryClass>(
-  //     'AuthRepositoryClass',
-  //     { useClass: AuthRepositoryClass },
-  //   );
+  const authRepo = container.register<AuthRepositoryClass>("AuthRepoClass", {
+    useClass: AuthRepositoryClass,
+  });
 
   // const userRepo = container.register<UserRepositoryClass>(
   //   'UserRepositoryClass',
@@ -33,27 +30,30 @@ const bootstrapDiRegister = async () => {
   // );
 
   const prodRepo = container.register<ProductBaseRepoInterface>(
-    'ProductBaseRepoInterface',
+    "ProductBaseRepoInterface",
     ProductRepositoryClass,
   );
 
-  const userServ = container.register<UserServiceClass>('UserServiceClass', {
+  const userServ = container.register<UserServiceClass>("UserServiceClass", {
     useClass: UserServiceClass,
   });
 
-  const prodServ = container.register<ProductService>('ProductService', {
+  const prodServ = container.register<ProductService>("ProductService", {
     useClass: ProductService,
   });
 
   const passHashServ = container.register<PasswordHashingService>(
-    'PasswordHashingBcrypt',
+    "PasswordHashingBcrypt",
     { useClass: PasswordHashingBcrypt },
   );
 
-  const jwtServ = container.register<JwtService>('JwtService', {
+  const jwtServ = container.register<JwtService>("JwtService", {
     useClass: JwtServiceProv,
   });
 
+  const authServ = container.register<AuthService>("AuthService", {
+    useClass: AuthService,
+  });
   // const userRepo = container.register<UserRepositoryClass>('UserRepository', {
   //   useFactory: () => {
   //     const userRepo = new UserRepositoryClass(ds.getRepository(UserModel));
@@ -69,7 +69,8 @@ const bootstrapDiRegister = async () => {
     // userRepoInterface,
     prodRepoInterface,
     // userRepo,
-    //     authRepo,
+    authRepo,
+    authServ,
     passHashServ,
     jwtServ,
     userServ,

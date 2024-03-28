@@ -16,7 +16,7 @@ import { inject, injectable } from "tsyringe";
 export class UserController {
   constructor(
     @inject("UserServiceClass") private readonly userServ: UserServiceClass,
-    private readonly authServ: AuthService,
+    @inject("AuthService") private readonly authServ: AuthService,
   ) {}
 
   createUser = async (req: Request, res: Response) => {
@@ -24,7 +24,15 @@ export class UserController {
 
     const createUser = await this.userServ.createUser(createDto);
 
-    return res.status(201).send(createUser);
+    return res
+      .status(201)
+
+      .json({
+        status: 201,
+        code: "user_created",
+        createUser,
+        message: "User has been successfully created",
+      });
   };
 
   login = async (req: Request, res: Response) => {
@@ -39,10 +47,7 @@ export class UserController {
         res.status(307).send(resp); // temporary redirect
       }
     }
-    console.log(resps, "RESPS");
     const { authToken, message, status } = resps;
-
-    console.log(authToken, "AUTH TOKEN FROM CONTROLLER");
 
     if (authToken) {
       res.cookie("token", authToken, {
@@ -55,8 +60,6 @@ export class UserController {
       });
     }
 
-    console.log(req.cookies, "COOKIES");
-
     return res.status(200).send({ message, status });
   };
 
@@ -64,7 +67,12 @@ export class UserController {
     const fetchAllDto = FetchAllUsersDto.fetchAll(req.id);
     const allUsers = await this.userServ.fetchAllUsers(fetchAllDto);
 
-    return res.status(200).send(allUsers);
+    return res.json({
+      status: 200,
+      code: "OK",
+      allUsers,
+      message: "Users data in the database",
+    });
   };
 
   fetchUserById = async (req: Request, res: Response) => {
@@ -74,7 +82,12 @@ export class UserController {
 
     const userFound = await this.userServ.fetchUser(dto);
 
-    return res.status(200).send(userFound);
+    return res.json({
+      status: 200,
+      code: "OK",
+      userFound,
+      message: "User Found",
+    });
   };
 
   updateUser = async (req: Request, res: Response) => {
@@ -84,7 +97,12 @@ export class UserController {
 
     const updatedUser = await this.userServ.updateUser(dto);
 
-    return res.status(200).send(updatedUser);
+    return res.json({
+      status: 200,
+      code: "OK",
+      updatedUser,
+      message: "User data has been updated",
+    });
   };
 
   deleteUser = async (req: Request, res: Response) => {

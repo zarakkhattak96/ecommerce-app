@@ -1,11 +1,9 @@
-import { NotAuthorized, NotFoundError, AppError } from '@app/app.errors';
-import { PasswordHashingService } from '../password-hashing.service';
-import { JwtService } from '../jwt.service';
-import { LoginDto } from '@app/dto/auth/auth.dto';
-import { AuthRepositoryClass } from '@infra/db/repositories/auth.repository';
-import { autoInjectable, injectable } from 'tsyringe';
-import { PasswordHashingBcrypt } from '@infra/password-hashing';
-import { JwtServiceProv } from '@infra/jwt';
+import { NotAuthorized, NotFoundError, AppError } from "@app/app.errors";
+import { LoginDto } from "@app/dto/auth/auth.dto";
+import { AuthRepositoryClass } from "@infra/db/repositories/auth.repository";
+import { autoInjectable, inject, injectable } from "tsyringe";
+import { PasswordHashingBcrypt } from "@infra/password-hashing";
+import { JwtServiceProv } from "@infra/jwt";
 
 export type AuthResponseType = {
   redirectUrl?: string;
@@ -14,21 +12,22 @@ export type AuthResponseType = {
   description?: string;
   message?: string;
   authToken?: string;
-  statusCode?: Response['status'];
+  statusCode?: Response["status"];
 };
 
-const LOGIN_ERR = new AppError('Incorrect email/password', 'fail');
+const LOGIN_ERR = new AppError("Incorrect email/password", "fail");
 
-export const authError = (description: string, code: 'not_authorized') => {
+export const authError = (description: string, code: "not_authorized") => {
   new NotAuthorized(description, code);
 };
 
 @autoInjectable()
 export class AuthService {
   constructor(
+    @inject("PasswordHashingBcrypt")
     private readonly passServ: PasswordHashingBcrypt,
-    private readonly authRepo: AuthRepositoryClass,
-    private readonly jwtServ: JwtServiceProv,
+    @inject("AuthRepoClass") private readonly authRepo: AuthRepositoryClass,
+    @inject("JwtService") private readonly jwtServ: JwtServiceProv,
   ) {}
 
   async login(authDto: LoginDto) {
@@ -36,7 +35,7 @@ export class AuthService {
 
     const authUser = await this.authRepo.getByEmail(email);
 
-    if (!authUser) throw new NotFoundError('User does not exist');
+    if (!authUser) throw new NotFoundError("User does not exist");
 
     const verifyPassword = await this.passServ.verifyPassword(
       password,
@@ -48,12 +47,12 @@ export class AuthService {
       sub: authUser.uuid,
     });
 
-    console.log(authToken, 'AUTH TOKEN');
+    console.log(authToken, "AUTH TOKEN");
 
     if (authUser && verifyPassword) {
       return {
-        message: 'Successfully logged in',
-        status: 'Success',
+        message: "Successfully logged in",
+        status: "Success",
         authToken,
       };
     }
