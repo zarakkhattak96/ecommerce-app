@@ -24,11 +24,6 @@ const bootstrapDiRegister = async () => {
     useClass: AuthRepositoryClass,
   });
 
-  // const userRepo = container.register<UserRepositoryClass>(
-  //   'UserRepositoryClass',
-  //   { useClass: UserRepositoryClass },
-  // );
-
   const prodRepo = container.register<ProductBaseRepoInterface>(
     "ProductBaseRepoInterface",
     ProductRepositoryClass,
@@ -54,21 +49,11 @@ const bootstrapDiRegister = async () => {
   const authServ = container.register<AuthService>("AuthService", {
     useClass: AuthService,
   });
-  // const userRepo = container.register<UserRepositoryClass>('UserRepository', {
-  //   useFactory: () => {
-  //     const userRepo = new UserRepositoryClass(ds.getRepository(UserModel));
-  //     return userRepo;
-  //   },
-  // });
 
-  // const userRepo = container.register('UserModel', {
-  //   useClass: UserModel,
-  // });
+  //TODO: To add cart routes
 
   return {
-    // userRepoInterface,
     prodRepoInterface,
-    // userRepo,
     authRepo,
     authServ,
     passHashServ,
