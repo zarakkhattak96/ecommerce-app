@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserPurchases } from "../user/user-purchases.model";
+import { CartModel } from "../cart/cart.model";
 
 @Entity("products", { schema: "ecommerce" })
 export class ProductModel {
@@ -39,4 +40,10 @@ export class ProductModel {
     cascade: true,
   })
   purchases: UserPurchases;
+
+  @OneToMany(() => CartModel, (cart) => cart.product, {
+    nullable: false,
+    cascade: true,
+  })
+  carts: CartModel[];
 }

@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { v4 as uuidv4 } from "@napi-rs/uuid";
 import { UserPurchases } from "./user-purchases.model";
+import { CartModel } from "../cart/cart.model";
 @Entity("users", { schema: "ecommerce" })
 export class UserModel {
   @PrimaryGeneratedColumn("increment", {
@@ -45,4 +46,10 @@ export class UserModel {
     cascade: true,
   })
   purchases: UserPurchases;
+
+  @OneToMany(() => CartModel, (cart) => cart.user, {
+    nullable: false,
+    cascade: true,
+  })
+  carts: CartModel;
 }
