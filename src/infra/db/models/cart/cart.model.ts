@@ -34,11 +34,11 @@ export class CartModel {
   @Column("character varying", { name: "description", nullable: true })
   description: string | null;
 
-  @Column("integer", { name: "product_id", nullable: false })
-  productId: number;
+  @Column("integer", { name: "product_id", nullable: true })
+  productId: number | null;
 
-  @Column("integer", { name: "user_id", nullable: false })
-  userId: number;
+  @Column("integer", { name: "user_id", nullable: true })
+  userId: number | null;
 
   @ManyToOne(() => ProductModel, (prodMod) => prodMod.carts)
   @JoinColumn({

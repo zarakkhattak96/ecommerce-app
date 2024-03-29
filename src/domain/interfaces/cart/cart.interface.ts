@@ -5,8 +5,8 @@ export interface CartInterface {
   shippingFee: number | null;
   total: number | null;
   description: string | null;
-  productId: number;
-  userId: number;
+  productId?: number | null;
+  userId?: number | null;
   productName: string | null;
 }
 
