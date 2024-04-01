@@ -10,5 +10,7 @@ export const bootstrapCartRoutes = (cartController: CartController) => {
 
   router.get("/cart", cartController.fetchAllProds);
 
+  router.delete("/cart/:prodInCart", cartController.removeFromCart);
+
   return router;
 };

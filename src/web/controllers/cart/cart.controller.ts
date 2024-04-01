@@ -2,6 +2,7 @@ import {
   AddToCartDto,
   AllProdsInCartDto,
   FetchFromCartDto,
+  RemoveProdFromCartDto,
   UpdateProdsInCart,
 } from "@app/dto/cart/cart.dto";
 import { CartService } from "@app/services/cart/cart.service";
@@ -66,6 +67,24 @@ export class CartController {
       code: "OK",
       message: "All products added to the cart",
       productsInCart: products,
+    });
+  };
+
+  removeFromCart = async (req: Request, res: Response) => {
+    const prodToRemoveId = req.params.prodInCart;
+
+    const dto = RemoveProdFromCartDto.removeProd(
+      req.id,
+      parseInt(prodToRemoveId),
+    );
+
+    const prodRemoved = await this.cartServ.removeProdFromCart(dto);
+
+    return res.status(200).json({
+      status: 200,
+      code: "OK",
+      message: `Product with id: ${prodToRemoveId} has been removed from the cart`,
+      product: prodRemoved,
     });
   };
 }
