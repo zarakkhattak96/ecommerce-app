@@ -41,6 +41,9 @@ export class UserModel {
   @Column("character varying", { name: "confirm_password", nullable: true })
   confirmPassword: string | null;
 
+  @Column("character varying", { name: "role", nullable: true })
+  role: string | null;
+
   @OneToMany(() => UserPurchases, (purchases) => purchases.user, {
     nullable: false,
     cascade: true,
