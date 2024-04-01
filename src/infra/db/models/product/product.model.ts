@@ -45,5 +45,5 @@ export class ProductModel {
     nullable: false,
     cascade: true,
   })
-  carts: CartModel[];
+  cart: CartModel[];
 }

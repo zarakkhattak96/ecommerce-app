@@ -40,14 +40,14 @@ export class CartModel {
   @Column("integer", { name: "user_id", nullable: true })
   userId: number | null;
 
-  @ManyToOne(() => ProductModel, (prodMod) => prodMod.carts)
+  @ManyToOne(() => ProductModel, (prodMod) => prodMod.cart)
   @JoinColumn({
     name: "product_id",
     referencedColumnName: "id",
   })
   product: ProductModel;
 
-  @ManyToOne(() => UserModel, (userMod) => userMod.carts)
+  @ManyToOne(() => UserModel, (userMod) => userMod.cart)
   @JoinColumn({
     name: "user_id",
     referencedColumnName: "id",

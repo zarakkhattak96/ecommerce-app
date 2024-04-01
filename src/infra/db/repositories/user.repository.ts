@@ -24,7 +24,7 @@ export class UserRepositoryClass implements UserBaseRepoInterface {
 
   async fetchAllUsers() {
     const fetchAllUsers = await this.userRepo.find({
-      relations: ["purchases"],
+      relations: ["cart"],
     });
 
     if (!fetchAllUsers)
@@ -36,7 +36,7 @@ export class UserRepositoryClass implements UserBaseRepoInterface {
   async fetchByEmail(email: string) {
     const fetchUserByEmail = await this.userRepo.findOne({
       where: { email: email },
-      relations: ["purchases"],
+      relations: ["cart"],
     });
 
     if (fetchUserByEmail) {
@@ -47,7 +47,7 @@ export class UserRepositoryClass implements UserBaseRepoInterface {
   async fetchById(id: number) {
     const fetchUser = await this.userRepo.findOne({
       where: { id: id },
-      relations: ["purchases"],
+      relations: ["cart"],
     });
 
     if (!fetchUser) throw new NotFoundError(`No user found with id: ${id}`);
@@ -60,7 +60,7 @@ export class UserRepositoryClass implements UserBaseRepoInterface {
 
     const findUpdatedUser = await this.userRepo.findOne({
       where: { id: userId },
-      relations: ["purchases"],
+      relations: ["cart"],
     });
 
     if (!findUpdatedUser)
@@ -72,7 +72,7 @@ export class UserRepositoryClass implements UserBaseRepoInterface {
   async deleteUser(userId: number) {
     const userFound = await this.userRepo.findOne({
       where: { id: userId },
-      relations: ["purchases"],
+      relations: ["cart"],
     });
 
     if (!userFound) throw new NotFoundError(`No user found with id: ${userId}`);

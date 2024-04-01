@@ -23,7 +23,7 @@ export class ProductRepositoryClass implements ProductBaseRepoInterface {
   async fetch(id: number) {
     const fetchProd = await this.prodBaseRepo.findOne({
       where: { id: id },
-      relations: ["purchases"],
+      relations: ["cart"],
     });
 
     if (!fetchProd) throw new NotFoundError(`No product found with id: ${id}`);
@@ -33,7 +33,7 @@ export class ProductRepositoryClass implements ProductBaseRepoInterface {
 
   async fetchAll() {
     const fetchProds = await this.prodBaseRepo.find({
-      relations: ["purchases"],
+      relations: ["cart"],
     });
 
     if (!fetchProds)
@@ -47,7 +47,7 @@ export class ProductRepositoryClass implements ProductBaseRepoInterface {
 
     const updatedProduct = await this.prodBaseRepo.findOne({
       where: { id: prodId },
-      relations: ["purchases"],
+      relations: ["cart"],
     });
 
     if (!updatedProduct) throw new NotFoundError("No product was updated");
@@ -58,7 +58,7 @@ export class ProductRepositoryClass implements ProductBaseRepoInterface {
   async delete(id: number) {
     const fetchProdById = await this.prodBaseRepo.findOne({
       where: { id: id },
-      relations: ["purchases"],
+      relations: ["cart"],
     });
 
     if (!fetchProdById)

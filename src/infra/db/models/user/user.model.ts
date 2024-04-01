@@ -51,5 +51,5 @@ export class UserModel {
     nullable: false,
     cascade: true,
   })
-  carts: CartModel;
+  cart: CartModel;
 }

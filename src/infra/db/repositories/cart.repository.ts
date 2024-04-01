@@ -20,13 +20,18 @@ export class CartRepositoryClass implements CartBaseInterface {
   }
 
   async fetchAllFromCart() {
-    const fetchAllProds = await this.cartRepo.find();
+    const fetchAllProds = await this.cartRepo.find({
+      relations: ["product", "user"],
+    });
 
     return fetchAllProds;
   }
 
   async fetchOneFromCart(id: number) {
-    const fetchOne = await this.cartRepo.findOne({ where: { id: id } });
+    const fetchOne = await this.cartRepo.findOne({
+      where: { id: id },
+      relations: ["product", "user"],
+    });
 
     if (!fetchOne) {
       throw new NotFoundError(`No product found in cart with id ${id}`);
@@ -40,6 +45,7 @@ export class CartRepositoryClass implements CartBaseInterface {
 
     const fetchUpdated = await this.cartRepo.findOne({
       where: { id: prodInCartId },
+      relations: ["product", "user"],
     });
 
     if (!fetchUpdated) {
@@ -50,7 +56,10 @@ export class CartRepositoryClass implements CartBaseInterface {
   }
 
   async deleteFromCart(id: number) {
-    const prodInCart = await this.cartRepo.findOne({ where: { id: id } });
+    const prodInCart = await this.cartRepo.findOne({
+      where: { id: id },
+      relations: ["product", "user"],
+    });
 
     if (!prodInCart) {
       throw new NotFoundError(
