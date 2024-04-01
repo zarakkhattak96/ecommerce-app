@@ -15,7 +15,16 @@ export class CartRepositoryClass implements CartBaseInterface {
   }
 
   async addToCart(cart: CartInterface) {
-    const add = this.cartRepo.create(cart);
+    const totalInCart = (cart.price || 0) * (cart.quantity || 0);
+
+    const add = this.cartRepo.create({
+      productName: cart.productName,
+      price: cart.price,
+      shippingFee: cart.shippingFee,
+      total: totalInCart,
+      description: cart.description,
+      quantity: cart.quantity,
+    });
     return await this.cartRepo.save(add, { reload: true });
   }
 
@@ -41,7 +50,17 @@ export class CartRepositoryClass implements CartBaseInterface {
   }
 
   async updateInCart(prodInCartId: number, cart: CartInterface) {
-    await this.cartRepo.update({ id: prodInCartId }, cart);
+    const totalInCart = (cart.price || 0) * (cart.quantity || 0);
+    const updatedProd = {
+      productName: cart.productName,
+      price: cart.price,
+      quantity: cart.quantity,
+      shippingFee: cart.shippingFee,
+      total: totalInCart,
+      description: cart.description,
+    };
+
+    await this.cartRepo.update({ id: prodInCartId }, updatedProd);
 
     const fetchUpdated = await this.cartRepo.findOne({
       where: { id: prodInCartId },
