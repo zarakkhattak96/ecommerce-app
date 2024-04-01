@@ -1,5 +1,6 @@
 import {
   AddToCartDto,
+  AllProdsInCartDto,
   FetchFromCartDto,
   UpdateProdsInCart,
 } from "@app/dto/cart/cart.dto";
@@ -52,6 +53,19 @@ export class CartController {
       code: "OK",
       message: `Product with id: ${prodInCartId} has been updated`,
       product: productUpdated,
+    });
+  };
+
+  fetchAllProds = async (req: Request, res: Response) => {
+    const dto = AllProdsInCartDto.fetchAllProds(req.id);
+
+    const products = await this.cartServ.fetchAllProdsFromCart(dto);
+
+    return res.status(200).json({
+      status: 200,
+      code: "OK",
+      message: "All products added to the cart",
+      productsInCart: products,
     });
   };
 }

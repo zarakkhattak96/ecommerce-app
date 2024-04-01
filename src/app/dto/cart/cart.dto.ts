@@ -75,16 +75,19 @@ export class UpdateProdsInCart {
   }
 }
 
-export class ProdInCartByIdDto {
+export class RemoveProdFromCartDto {
   private constructor(
     readonly contextId: string,
     readonly prodIdInCart: number,
   ) {}
 
-  static removeProd(contextId: string, prodInCart: number): ProdInCartByIdDto {
+  static removeProd(
+    contextId: string,
+    prodInCart: number,
+  ): RemoveProdFromCartDto {
     const validId = validateId(prodInCart);
 
-    return new ProdInCartByIdDto(contextId, validId);
+    return new RemoveProdFromCartDto(contextId, validId);
   }
 }
 

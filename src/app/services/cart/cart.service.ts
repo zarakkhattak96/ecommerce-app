@@ -1,7 +1,7 @@
 import {
   AddToCartDto,
   AllProdsInCartDto,
-  ProdInCartByIdDto,
+  RemoveProdFromCartDto,
   UpdateProdsInCart,
 } from "@app/dto/cart/cart.dto";
 import { CartRepositoryClass } from "@infra/db/repositories/cart.repository";
@@ -24,9 +24,7 @@ export class CartService {
   async fetchAllProdsFromCart(fetchAllDto: AllProdsInCartDto) {
     const fetchProdsFromCart = await this.cartRepo.fetchAllFromCart();
 
-    return {
-      products: fetchProdsFromCart,
-    };
+    return fetchProdsFromCart;
   }
 
   async updateProdInCart(updateProd: UpdateProdsInCart) {
@@ -42,13 +40,13 @@ export class CartService {
     };
   }
 
-  async removeProdFromCart(removeDto: ProdInCartByIdDto) {
+  async removeProdFromCart(removeDto: RemoveProdFromCartDto) {
     const { prodIdInCart } = removeDto;
 
     return await this.cartRepo.deleteFromCart(prodIdInCart);
   }
 
-  async fetchById(fetchDto: ProdInCartByIdDto) {
+  async fetchById(fetchDto: RemoveProdFromCartDto) {
     const { prodIdInCart } = fetchDto;
 
     return await this.cartRepo.fetchOneFromCart(prodIdInCart);
