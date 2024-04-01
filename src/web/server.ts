@@ -8,6 +8,7 @@ import dotenv from "dotenv";
 import { bootstrapUserRoutes } from "./routes/user/user.routes";
 import bootstrapDi from "@infra/db/di";
 import ds from "@infra/config/connection.config";
+import { bootstrapCartRoutes } from "./routes/cart/cart.routes";
 
 dotenv.config();
 export const app = express();
@@ -16,6 +17,7 @@ const bootstrap = async () => {
   const diContainer = await bootstrapDi();
   const productRouter = bootstrapRoutes(diContainer.prodController);
   const userRouter = bootstrapUserRoutes(diContainer.userController);
+  const cartRouter = bootstrapCartRoutes(diContainer.cartController);
 
   contextIdGenerator(app);
 
@@ -23,7 +25,7 @@ const bootstrap = async () => {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
 
-  app.use("/api", userRouter, productRouter);
+  app.use("/api", userRouter, productRouter, cartRouter);
   const PORT = config.PORT;
 
   app.listen(PORT, () => {

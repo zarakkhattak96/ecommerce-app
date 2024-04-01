@@ -1,10 +1,12 @@
 import { AuthService } from "@app/services/auth/auth.service";
+import { CartService } from "@app/services/cart/cart.service";
 import { JwtService } from "@app/services/jwt.service";
 import { PasswordHashingService } from "@app/services/password-hashing.service";
 import { ProductService } from "@app/services/product/product.service";
 import { UserServiceClass } from "@app/services/user/user.service";
 import { ProductBaseRepoInterface } from "@domain/interfaces/product/product.interface";
 import { AuthRepositoryClass } from "@infra/db/repositories/auth.repository";
+import { CartRepositoryClass } from "@infra/db/repositories/cart.repository";
 import { ProductRepositoryClass } from "@infra/db/repositories/product.repositories";
 import { UserRepositoryClass } from "@infra/db/repositories/user.repository";
 import { JwtServiceProv } from "@infra/jwt";
@@ -50,7 +52,13 @@ const bootstrapDiRegister = async () => {
     useClass: AuthService,
   });
 
-  //TODO: To add cart routes
+  const cartServ = container.register<CartService>("CartService", {
+    useClass: CartService,
+  });
+
+  const cartRepo = container.register<CartRepositoryClass>("CartRepo", {
+    useClass: CartRepositoryClass,
+  });
 
   return {
     prodRepoInterface,
@@ -61,6 +69,8 @@ const bootstrapDiRegister = async () => {
     userServ,
     prodServ,
     prodRepo,
+    cartServ,
+    cartRepo,
   };
 };
 

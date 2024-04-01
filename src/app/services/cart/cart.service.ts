@@ -5,9 +5,13 @@ import {
   UpdateProdsInCart,
 } from "@app/dto/cart/cart.dto";
 import { CartRepositoryClass } from "@infra/db/repositories/cart.repository";
+import { inject, injectable } from "tsyringe";
 
+@injectable()
 export class CartService {
-  constructor(private readonly cartRepo: CartRepositoryClass) {}
+  constructor(
+    @inject("CartRepo") private readonly cartRepo: CartRepositoryClass,
+  ) {}
 
   async addToCart(addDto: AddToCartDto) {
     const addProd = await this.cartRepo.addToCart(addDto.addData);
