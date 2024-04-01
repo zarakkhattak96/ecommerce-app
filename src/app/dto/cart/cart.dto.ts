@@ -87,3 +87,19 @@ export class ProdInCartByIdDto {
     return new ProdInCartByIdDto(contextId, validId);
   }
 }
+
+export class FetchFromCartDto {
+  private constructor(
+    readonly contextId: string,
+    readonly prodIdInCart: number,
+  ) {}
+
+  static fetchFromCart(
+    contextId: string,
+    prodIdInCart: number,
+  ): FetchFromCartDto {
+    const validId = validateId(prodIdInCart);
+
+    return new FetchFromCartDto(contextId, validId);
+  }
+}
