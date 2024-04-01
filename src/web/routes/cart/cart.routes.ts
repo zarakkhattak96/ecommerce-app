@@ -5,5 +5,8 @@ export const bootstrapCartRoutes = (cartController: CartController) => {
   router.post("/cart", cartController.addToCart);
 
   router.get("/cart/:prodInCart", cartController.fetchFromCart);
+
+  router.put("/cart/:prodInCart", cartController.updateProdInCart);
+
   return router;
 };
