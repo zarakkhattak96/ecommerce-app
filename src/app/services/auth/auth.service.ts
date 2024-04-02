@@ -15,7 +15,7 @@ export type AuthResponseType = {
   statusCode?: Response["status"];
 };
 
-const LOGIN_ERR = new AppError("Incorrect email/password", "fail");
+const LOGIN_ERR = new AppError("Incorrect credentials", "fail");
 
 export const authError = (description: string, code: "not_authorized") => {
   new NotAuthorized(description, code);
@@ -42,7 +42,7 @@ export class AuthService {
       authUser.password,
     );
 
-    const authToken = await this.jwtServ?.sign({
+    const authToken = await this.jwtServ.sign({
       // secret: config.authConfig.JWT_SECRET,
       sub: authUser.uuid,
     });
