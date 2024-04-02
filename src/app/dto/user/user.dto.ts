@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ID_SCHEMA, validateData, validateId } from "../utils";
+import { validateData, validateId } from "../utils";
 
 export class CreateUserDto {
   private static readonly schema = z.object({
@@ -14,6 +14,7 @@ export class CreateUserDto {
     city: z.string().nullable(),
     password: z.string().nullable(),
     confirmPassword: z.string().nullable(),
+    role: z.string().nullable().optional(),
   });
 
   private constructor(
@@ -62,6 +63,7 @@ export class UpdateUserDto {
       password: z.string(),
       confirmPassword: z.string(),
       phoneNumber: z.string().nullable(),
+      role: z.string().nullable().optional(),
     })
     .partial({ uuid: true, productId: true });
 

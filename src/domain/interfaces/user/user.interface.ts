@@ -10,6 +10,7 @@ export interface UserInterface {
   city: string | null;
   password: string;
   confirmPassword: string | null;
+  role?: string | null;
 }
 
 export interface UserBaseRepoInterface {

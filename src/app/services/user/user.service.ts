@@ -65,6 +65,7 @@ export class UserServiceClass {
       lastName: createData.lastName,
       productId: createData.productId,
       phoneNumber: createData.phoneNumber,
+      role: createData.role,
     });
 
     return {
@@ -127,6 +128,7 @@ export class UserServiceClass {
           address: updateData.city,
           password: hashedUserPassword,
           confirmPassword: hashedConfirmPassword,
+          role: updateData.role,
         });
       }
     }
