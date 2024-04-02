@@ -5,18 +5,14 @@ import {
   FetchUserDto,
   UpdateUserDto,
 } from "@app/dto/user/user.dto";
-import { AuthService, AuthResponseType } from "@app/services/auth/auth.service";
 import { UserServiceClass } from "@app/services/user/user.service";
 import { Request, Response } from "express";
-import { LoginDto } from "@app/dto/auth/auth.dto";
-import authConfig from "@infra/config/auth.config";
 import { inject, injectable } from "tsyringe";
 
 @injectable()
 export class UserController {
   constructor(
     @inject("UserServiceClass") private readonly userServ: UserServiceClass,
-    @inject("AuthService") private readonly authServ: AuthService,
   ) {}
 
   createUser = async (req: Request, res: Response) => {
@@ -33,34 +29,6 @@ export class UserController {
         createUser,
         message: "User has been successfully created",
       });
-  };
-
-  login = async (req: Request, res: Response) => {
-    const dto = LoginDto.create(req.body, req._user);
-
-    const resp = await this.authServ.login(dto);
-
-    const resps = resp as AuthResponseType;
-
-    if (resps) {
-      if (resps.redirectUrl) {
-        res.status(307).send(resp); // temporary redirect
-      }
-    }
-    const { authToken, message, status } = resps;
-
-    if (authToken) {
-      res.cookie("token", authToken, {
-        httpOnly: true,
-        maxAge: authConfig.JWT_EXPIRATION_SECONDS,
-        secure: true,
-        sameSite: "none",
-        path: "/login",
-        domain: req.hostname,
-      });
-    }
-
-    return res.status(200).send({ message, status });
   };
 
   fetchAllUsers = async (req: Request, res: Response) => {
