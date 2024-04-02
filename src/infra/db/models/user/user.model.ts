@@ -1,6 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { v4 as uuidv4 } from "@napi-rs/uuid";
-import { UserPurchases } from "./user-purchases.model";
 import { CartModel } from "../cart/cart.model";
 @Entity("users", { schema: "ecommerce" })
 export class UserModel {
@@ -44,15 +43,15 @@ export class UserModel {
   @Column("character varying", { name: "role", nullable: true })
   role: string | null;
 
-  @OneToMany(() => UserPurchases, (purchases) => purchases.user, {
-    nullable: false,
-    cascade: true,
-  })
-  purchases: UserPurchases;
+  // @OneToMany(() => UserPurchases, (purchases) => purchases.user, {
+  //   nullable: false,
+  //   cascade: true,
+  // })
+  // purchases: UserPurchases;
 
   @OneToMany(() => CartModel, (cart) => cart.user, {
     nullable: false,
     cascade: true,
   })
-  cart: CartModel;
+  cart: CartModel[];
 }

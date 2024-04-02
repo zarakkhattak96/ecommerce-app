@@ -13,6 +13,7 @@ export class CartModel {
   @PrimaryGeneratedColumn("increment", {
     name: "id",
     type: "integer",
+    primaryKeyConstraintName: "cart_pkey",
   })
   id: number;
 

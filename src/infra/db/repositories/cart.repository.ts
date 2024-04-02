@@ -24,6 +24,8 @@ export class CartRepositoryClass implements CartBaseInterface {
       total: totalInCart,
       description: cart.description,
       quantity: cart.quantity,
+      userId: cart.userId,
+      productId: cart.productId,
     });
     return await this.cartRepo.save(add, { reload: true });
   }

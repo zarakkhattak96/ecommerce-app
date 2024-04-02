@@ -1,5 +1,4 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { UserPurchases } from "../user/user-purchases.model";
 import { CartModel } from "../cart/cart.model";
 
 @Entity("products", { schema: "ecommerce" })
@@ -35,11 +34,11 @@ export class ProductModel {
   @Column("boolean", { name: "is_available", nullable: true })
   isAvailable: boolean | null;
 
-  @OneToMany(() => UserPurchases, (purchases) => purchases.product, {
-    nullable: false,
-    cascade: true,
-  })
-  purchases: UserPurchases;
+  // @OneToMany(() => UserPurchases, (purchases) => purchases.product, {
+  //   nullable: false,
+  //   cascade: true,
+  // })
+  // purchases: UserPurchases;
 
   @OneToMany(() => CartModel, (cart) => cart.product, {
     nullable: false,

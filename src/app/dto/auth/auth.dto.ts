@@ -1,6 +1,6 @@
-import { UserModel } from '@infra/db/models/user/user.model';
-import { z } from 'zod';
-import { validateData } from '../utils';
+import { UserModel } from "@infra/db/models/user/user.model";
+import { z } from "zod";
+import { validateData } from "../utils";
 
 export class LoginDto {
   private static readonly schema = z.object({
